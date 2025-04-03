@@ -1,0 +1,7 @@
+{
+  "name": "salim",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
