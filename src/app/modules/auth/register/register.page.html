@@ -1,13 +1,35 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>register</ion-title>
+    <ion-title>Business Registration</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">register</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <form (ngSubmit)="onRegister()">
+    <ion-item>
+      <ion-input [(ngModel)]="phoneNumber" name="phoneNumber" placeholder="Phone Number" type="tel" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input [(ngModel)]="firstName" name="firstName" placeholder="First Name" type="text" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input [(ngModel)]="lastName" name="lastName" placeholder="Last Name" type="text" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input [(ngModel)]="businessName" name="businessName" placeholder="Business Name" type="text" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input [(ngModel)]="businessField" name="businessField" placeholder="Business Field" type="text" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input [(ngModel)]="wilaya" name="wilaya" placeholder="Wilaya" type="text" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input [(ngModel)]="city" name="city" placeholder="City" type="text" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input [(ngModel)]="address" name="address" placeholder="Address" type="text" required></ion-input>
+    </ion-item>
+    <ion-button expand="full" type="submit" color="primary">Submit</ion-button>
+  </form>
 </ion-content>
