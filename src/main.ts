@@ -4,6 +4,7 @@ import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalo
 
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 
 
 import {provideFirebaseApp, initializeApp} from '@angular/fire/app';
@@ -19,6 +20,7 @@ bootstrapApplication(AppComponent, {
 
     provideRouter(routes),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),

@@ -13,10 +13,13 @@
       <ion-input [(ngModel)]="password" name="password" placeholder="Password" type="password" required></ion-input>
     </ion-item>
     <ion-button expand="full" type="submit">Login</ion-button>
-    <!-- <a href="#" class="forgot-password" (click)="onForgotPassword($event)">Forgot Password?</a> -->
+   
   </form>
   
   <div class="signup-link">
-    <!-- Don't have an account? <a href="#" (click)="onSignUp($event)">Sign Up</a> -->
+    Don't have an account? <a routerLink="/register">Sign Up</a>
+
+
   </div>
+  
 </ion-content>
