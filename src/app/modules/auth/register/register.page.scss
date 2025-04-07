@@ -1,0 +1,211 @@
+// Variables
+$primary-color: #3880ff;
+$primary-dark: darken($primary-color, 10%);
+$accent-color: #4c8dff;
+$light-gray: #f8f9fa;
+$medium-gray: #e0e0e0;
+$dark-gray: #4a5568;
+$white: #fff;
+$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+$border-radius: 8px;
+
+// Header Styles
+ion-header {
+  ion-toolbar {
+    --background: $primary-color;
+    --color: $white;
+    --border-width: 0;
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+    
+    ion-title {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-align: center;
+    }
+  }
+}
+
+// Content Styles
+ion-content {
+  --background: $light-gray;
+  
+  form {
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: $white;
+    border-radius: $border-radius;
+    padding: 24px;
+    box-shadow: $shadow-md;
+    
+    ion-item {
+      --padding-start: 0;
+      --inner-padding-end: 0;
+      --background: transparent;
+      --border-color: $medium-gray;
+      --highlight-color-focused: $accent-color;
+      margin-bottom: 16px;
+      --border-radius: $border-radius;
+      
+      &:last-of-type {
+        margin-bottom: 24px;
+      }
+      
+      ion-input {
+        --padding-start: 16px;
+        --padding-end: 16px;
+        --padding-top: 14px;
+        --padding-bottom: 14px;
+        --background: $light-gray;
+        --border-radius: $border-radius;
+        --placeholder-color: $dark-gray;
+        --placeholder-opacity: 0.6;
+        font-size: 16px;
+        
+        &.ion-touched.ion-invalid {
+          --background: rgba(255, 0, 0, 0.05);
+        }
+      }
+    }
+    
+    ion-button {
+      margin-top: 16px;
+      --background: $primary-color;
+      --background-activated: $primary-dark;
+      --background-hover: $primary-dark;
+      --border-radius: $border-radius;
+      --box-shadow: $shadow-sm;
+      --color: $white;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      height: 48px;
+      text-transform: none;
+      font-size: 16px;
+      
+      &:hover {
+        --box-shadow: $shadow-md;
+      }
+      
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: transparent;
+        border-radius: $border-radius;
+        transition: background-color 0.3s;
+      }
+      
+      &:active::after {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+}
+
+// Form section styling with subtle grouping
+form {
+  .form-section {
+    margin-bottom: 24px;
+    
+    &:not(:first-child) {
+      padding-top: 16px;
+      border-top: 1px solid $medium-gray;
+    }
+    
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: $dark-gray;
+      margin-bottom: 16px;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (min-width: 768px) {
+  ion-content {
+    form {
+      padding: 32px;
+      
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        
+        ion-item {
+          margin-bottom: 0;
+        }
+      }
+      
+      ion-button {
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+  }
+}
+
+// Add animation for form elements
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+ion-item {
+  animation: fadeInUp 0.3s ease-out forwards;
+  opacity: 0;
+  
+  @for $i from 1 through 10 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.05}s;
+    }
+  }
+}
+
+ion-button {
+  animation: fadeInUp 0.3s ease-out forwards;
+  animation-delay: 0.5s;
+  opacity: 0;
+}
+
+// Focus and input states
+ion-item.item-has-focus {
+  --border-color: $accent-color;
+  
+  ion-input {
+    --background: rgba($accent-color, 0.05);
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  ion-content {
+    --background: #121212;
+    
+    form {
+      background-color: #1e1e1e;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      
+      ion-item {
+        --border-color: #333;
+        
+        ion-input {
+          --background: #2a2a2a;
+          --placeholder-color: #aaa;
+        }
+      }
+    }
+  }
+}
