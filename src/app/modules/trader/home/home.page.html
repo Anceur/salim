@@ -1,13 +1,76 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>home</ion-title>
+    <ion-title>Accueil</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">home</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <div class="input-section">
+    <div class="header-image">
+      <img src="assets/images/logo.png" alt="Phone Directory" class="feature-image">
+    </div>
+    
+    <ion-item class="search-item">
+      <ion-icon name="search-outline" slot="start"></ion-icon>
+      <ion-input [(ngModel)]="searchQuery" placeholder="Rechercher des numéros..."></ion-input>
+    </ion-item>
+    
+    <ion-button expand="block" (click)="addPhoneNumber()" class="ion-margin-top">
+      <ion-icon name="call-outline" slot="start"></ion-icon>
+      Ajouter un numéro
+    </ion-button>
+  </div>
+  
+  <div class="phone-list ion-margin-top">
+    <h2>Numéros de Téléphone</h2>
+    
+    <ion-list *ngIf="filteredNumbers.length > 0">
+      <ion-item *ngFor="let item of filteredNumbers">
+        <ion-icon name="call" slot="start"></ion-icon>
+        <ion-label>
+          <h2>{{ item.number }}</h2>
+          <div class="rating-stats">
+            <ion-chip outline color="success">
+              <ion-label>Valide: {{ item.validRatings || 0 }}</ion-label>
+            </ion-chip>
+            <ion-chip outline color="danger">
+              <ion-label>Invalide: {{ item.invalidRatings || 0 }}</ion-label>
+            </ion-chip>
+            <ion-chip *ngIf="item.totalRatings > 0" outline color="primary">
+              <ion-label>Total: {{ item.totalRatings }}</ion-label>
+            </ion-chip>
+          </div>
+        </ion-label>
+        
+        <div class="rating-actions" slot="end">
+          <!-- Valid Rating Button -->
+          <ion-button 
+            fill="clear" 
+            color="success" 
+            (click)="ratePhone(item, true)" 
+            [class.active-rating]="hasValidRating(item)">
+            <ion-icon [name]="hasValidRating(item) ? 'thumbs-up' : 'thumbs-up-outline'"></ion-icon>
+          </ion-button>
+          
+          <!-- Invalid Rating Button -->
+          <ion-button 
+            fill="clear" 
+            color="danger" 
+            (click)="ratePhone(item, false)"
+            [class.active-rating]="hasInvalidRating(item)">
+            <ion-icon [name]="hasInvalidRating(item) ? 'thumbs-down' : 'thumbs-down-outline'"></ion-icon>
+          </ion-button>
+          
+          <!-- Delete Button -->
+          <ion-button slot="end" fill="clear" color="medium" (click)="deletePhoneNumber(item)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </ion-item>
+    </ion-list>
+    
+    <div class="empty-state" *ngIf="filteredNumbers.length === 0">
+      <p>Aucun numéro de téléphone trouvé</p>
+    </div>
+  </div>
 </ion-content>

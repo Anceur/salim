@@ -1,13 +1,118 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>register</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">register</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="register-container">
+    <div class="form-header">
+      <h2 class="form-title">Create Business Account</h2>
+      <p class="form-subtitle">Step {{currentStep}}: {{getStepTitle()}}</p>
+    </div>
+
+    <form (ngSubmit)="onRegister()">
+      <div class="progress-indicator">
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="progressWidth"></div>
+        </div>
+        <div class="step-indicators">
+          <div class="step" [class.completed]="currentStep > 1" [class.active]="currentStep === 1">1</div>
+          <div class="step" [class.completed]="currentStep > 2" [class.active]="currentStep === 2">2</div>
+          <div class="step" [class.completed]="currentStep > 3" [class.active]="currentStep === 3">3</div>
+        </div>
+      </div>      
+
+      <!-- Step 1: User Information -->
+      <div *ngIf="currentStep === 1" class="form-section">
+        <!-- Personal Information Section -->
+      <div class="form-section">
+        <div class="form-row">
+
+          <ion-item>
+            <ion-input [(ngModel)]="firstName" name="firstName" placeholder="First Name" type="text" required></ion-input>
+          </ion-item>
+          
+          <ion-item>
+            <ion-input [(ngModel)]="lastName" name="lastName" placeholder="Last Name" type="text" required></ion-input>
+          </ion-item>
+        </div>
+        
+        <ion-item>
+          <ion-icon name="mail-outline" slot="start"></ion-icon>
+          <ion-input [(ngModel)]="email" name="email" placeholder="Email" type="email" required></ion-input>
+        </ion-item>
+        
+        <ion-item>
+          <ion-icon name="call-outline" slot="start"></ion-icon>
+          <ion-input [(ngModel)]="phoneNumber" name="phoneNumber" placeholder="Phone Number" type="tel" required></ion-input>
+        </ion-item>
+        
+        <ion-item>
+          <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+          <ion-input [(ngModel)]="password" name="password" placeholder="Password" type="password" required></ion-input>
+          <ion-icon name="eye-outline" slot="end" class="password-toggle"></ion-icon>
+        </ion-item>
+              <!-- Location Information Section -->
+        <ion-item>
+          <ion-icon name="map-outline" slot="start"></ion-icon>
+          <ion-input [(ngModel)]="wilaya" name="wilaya" placeholder="Wilaya" type="text" required></ion-input>
+        </ion-item>
+      </div>
+
+
+      <div class="terms-container">
+        <ion-checkbox [(ngModel)]="agreeTerms" name="agreeTerms"></ion-checkbox>
+        <span class="terms-text">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+      </div>
+      </div>
+
+      <!-- Step 2: Business Information -->
+      <div *ngIf="currentStep === 2" class="form-section">
+
+      <!-- Business Information Section -->
+
+        <ion-item>
+          <ion-icon name="briefcase-outline" slot="start"></ion-icon>
+          <ion-input [(ngModel)]="businessName" name="businessName" placeholder="Business Name" type="text" required></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="build-outline" slot="start"></ion-icon>
+          <ion-input [(ngModel)]="businessField" name="businessField" placeholder="Business Field" type="text" required></ion-input>
+        </ion-item>
+      </div>
+
+      <!-- Step 3: Proof of Business -->
+      <div *ngIf="currentStep === 3" class="form-section">
+
+        <ion-item>
+          <ion-label>Upload Proof of Business</ion-label>
+          <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+        </ion-item>
+        <div *ngIf="selectedFile">
+          <p>Selected file: {{selectedFile.name}}</p>
+        </div>
+      </div>
+
+      <div class="navigation-buttons">
+        <ion-button fill="outline" class="back-button" (click)="goToPreviousStep()" *ngIf="currentStep > 1">
+          Back
+        </ion-button>
+        
+        <ion-button class="next-button" (click)="goToNextStep()" *ngIf="currentStep < 3">
+          Next
+        </ion-button>
+
+        <ion-button type="submit" *ngIf="currentStep === 3">
+          Submit
+        </ion-button>
+      </div>
+    </form>
+
+    <div class="login-link">
+      Already have an account? <a routerLink="/logzin">Log In</a>
+    </div>
+  </div>
 </ion-content>

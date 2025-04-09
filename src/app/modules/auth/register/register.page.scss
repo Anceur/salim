@@ -1,0 +1,412 @@
+// Modern animations
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes progressAnimation {
+  from { width: 0%; }
+  to { width: 33%; }
+}
+
+// Header styling
+ion-header {
+  ion-toolbar {
+    --background: transparent;
+    --border-width: 0;
+    
+    ion-back-button {
+      --color: rgb(0, 0, 0);
+    }
+  }
+}
+
+ion-button {
+  font-size: 16px; // Makes text more readable
+  border-radius: 8px; // Softens the button edges
+  min-width: 120px; // Ensures consistent button width
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+}
+
+// Content styling
+ion-content {
+  --background: linear-gradient(135deg, #f5f7fa 0%, #e4ecf7 100%);
+  
+  .register-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 10px 15px 30px;
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  .form-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 25px;
+    text-align: center;
+    animation: fadeIn 0.6s ease-out;
+    
+    .business-icon {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      margin-bottom: 15px;
+      filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+    }
+    
+    .form-title {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 24px;
+      color: var(--ion-color-dark);
+      margin-bottom: 5px;
+    }
+    
+    .form-subtitle {
+      font-size: 18px;
+      color: var(--ion-color-medium);
+      max-width: 280px;
+    }
+  }
+  
+  // Progress indicator
+  .progress-indicator {
+    margin-bottom: 30px;
+    position: relative;
+    width: 100%;
+  
+    .progress-bar {
+      height: 4px;
+      background: #e1e6ef;
+      border-radius: 4px;
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+  
+      .progress-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #4a90e2, #64b6ff);
+        border-radius: 4px;
+        transition: width 0.5s ease-out;
+      }
+    }
+  
+    .step-indicators {
+      display: flex;
+      justify-content: space-between;
+      margin-top: -12px;
+      position: relative;
+      z-index: 2;
+  
+      .step {
+        width: 24px;
+        height: 24px;
+        background: #e1e6ef;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: #8795a9;
+        font-weight: 600;
+        transition: all 0.3s ease;
+  
+        &.active {
+          background: #4a90e2;
+          color: white;
+          box-shadow: 0 2px 8px rgba(74, 144, 226, 0.4);
+        }
+  
+        &.completed {
+          background: #4a90e2;
+          color: white;
+        }
+      }
+    }
+  }
+  
+  .section-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 15px;
+      }
+
+
+  form {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    margin-bottom: 20px;
+    
+    .form-section {
+      margin-bottom: 25px;
+      animation: fadeIn 0.7s ease-out;
+
+      &:not(:first-child) {
+        padding-top: 5px;
+      }
+      
+      .form-row {
+        display: flex;
+        gap: 15px;
+        flex-direction: row;
+        
+        ion-item {
+          flex: 1;
+        }
+      }
+
+    }
+    
+    ion-item {
+      --background: #f7f9fc;
+      --padding-start: 15px;
+      --padding-end: 15px;
+      --inner-padding-end: 0;
+      --min-height: 55px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      --highlight-height: 0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+      
+      &:last-of-type {
+        margin-bottom: 5px;
+      }
+      
+      ion-icon {
+        color: var(--ion-color-medium);
+        margin-right: 10px;
+        font-size: 18px;
+      }
+      
+      ion-input {
+        --padding-start: 8px;
+        --padding-top: 12px;
+        --padding-bottom: 12px;
+        font-size: 15px;
+        --placeholder-color: #9aa5b4;
+        --placeholder-opacity: 0.8;
+      }
+      
+      .password-toggle {
+        font-size: 18px;
+        opacity: 0.6;
+        cursor: pointer;
+        padding: 8px;
+        
+        &:active {
+          opacity: 1;
+        }
+      }
+    }
+    
+    .terms-container {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+      padding-left: 5px;
+      
+      ion-checkbox {
+        margin-right: 10px;
+        --size: 18px;
+        --border-radius: 4px;
+        --border-color: #cdd4e0;
+        --border-color-checked: #4a90e2;
+        --background-checked: #4a90e2;
+        --checkmark-color: white;
+      }
+      
+      .terms-text {
+        font-size: 13px;
+        color: var(--ion-color-medium);
+        
+        a {
+          color: #4a90e2;
+          text-decoration: none;
+          font-weight: 500;
+          
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+    
+    .register-button {
+      --background: linear-gradient(135deg, #4a90e2 0%, #3976d2 100%);
+      --background-hover: linear-gradient(135deg, #3976d2 0%, #2d5ca8 100%);
+      --border-radius: 12px;
+      --box-shadow: 0 6px 15px rgba(74, 144, 226, 0.3);
+      font-weight: 600;
+      font-size: 16px;
+      height: 52px;
+      margin-top: 15px;
+      letter-spacing: 0.6px;
+      text-transform: none;
+      overflow: hidden;
+      position: relative;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+          rgba(255, 255, 255, 0) 0%, 
+          rgba(255, 255, 255, 0.2) 50%, 
+          rgba(255, 255, 255, 0) 100%);
+        transform: translateX(-100%);
+        transition: transform 0.6s ease;
+      }
+      
+      &:hover::before {
+        transform: translateX(100%);
+      }
+      
+      ion-icon {
+        margin-right: 8px;
+        font-size: 18px;
+      }
+    }
+    .navigation-buttons {
+      display: flex;
+      justify-content: center; // Centers the buttons horizontally
+      align-items: center; // Aligns them vertically
+      gap: 15px; // Adds spacing between buttons
+      margin-top: 20px; // Adds some top margin for better spacing
+    }
+    
+  }
+  
+  .login-link {
+    text-align: center;
+    font-size: 14px;
+    color: #64748b;
+    margin-top: 15px;
+    
+    a {
+      color: var(--ion-color-primary);
+      font-weight: 600;
+      text-decoration: none;
+      margin-left: 5px;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 576px) {
+  ion-content {
+    form {
+      .form-row {
+        flex-direction: column;
+        gap: 0;
+      }
+    }
+  }
+}
+
+// Animation delays for form sections
+form {
+  .form-section {
+    &:nth-child(2) {
+      animation-delay: 0.1s;
+    }
+    
+    &:nth-child(3) {
+      animation-delay: 0.2s;
+    }
+    
+    &:nth-child(4) {
+      animation-delay: 0.3s;
+    }
+  }
+  
+  .terms-container {
+    animation: fadeIn 0.8s ease-out;
+    animation-delay: 0.5s;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+  
+  .register-button {
+    animation: fadeIn 0.8s ease-out;
+    animation-delay: 0.6s;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  ion-content {
+    --background: linear-gradient(135deg, #1a1c20 0%, #2a2d35 100%);
+    
+    form {
+      background: #2a2d35;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      
+      ion-item {
+        --background: #373a43;
+        
+        ion-icon {
+          color: #a0aec0;
+        }
+        
+        ion-input {
+          --placeholder-color: #8795a9;
+        }
+      }
+      
+      .terms-container {
+        .terms-text {
+          color: #a0aec0;
+        }
+      }
+    }
+    
+    .form-header {
+      .form-title {
+        color: #e2e8f0;
+      }
+      
+      .form-subtitle {
+        color: #a0aec0;
+      }
+    }
+    
+    .progress-indicator {
+      .progress-bar {
+        background: #373a43;
+      }
+      
+      .step-indicators {
+        .step {
+          background: #373a43;
+          color: #a0aec0;
+        }
+      }
+    }
+    
+    .login-link {
+      color: #a0aec0;
+    }
+  }
+}

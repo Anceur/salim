@@ -1,0 +1,306 @@
+// Modern animations
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+// Header styling
+ion-header {
+  ion-toolbar {
+    --background: transparent;
+    --border-style: none;
+    
+    ion-title {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 20px;
+      color: var(--ion-color-primary);
+      letter-spacing: 0.5px;
+    }
+  }
+}
+
+// Content styling
+ion-content {
+  --background: linear-gradient(135deg, #f5f7fa 0%, #e4ecf7 100%);
+  
+  .login-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  .logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+    animation: fadeIn 0.6s ease-out;
+    
+    .app-logo {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      margin-bottom: 15px;
+      animation: floatUp 4s ease-in-out infinite;
+      filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+    }
+    
+    .welcome-text {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 24px;
+      color: var(--ion-color-dark);
+      margin-bottom: 5px;
+    }
+    
+    .subtitle {
+      font-size: 14px;
+      color: var(--ion-color-medium);
+      text-align: center;
+    }
+  }
+  
+  form {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    margin-bottom: 20px;
+    
+    ion-item {
+      --background: #f7f9fc;
+      --padding-start: 15px;
+      --padding-end: 15px;
+      --inner-padding-end: 0;
+      --min-height: 55px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      --highlight-height: 0;
+      
+      &:last-of-type {
+        margin-bottom: 10px;
+      }
+      
+      ion-icon {
+        color: var(--ion-color-medium);
+        margin-right: 10px;
+        font-size: 20px;
+      }
+      
+      ion-input {
+        --padding-start: 8px;
+        --padding-top: 12px;
+        --padding-bottom: 12px;
+        font-size: 15px;
+        font-weight: 400;
+        --placeholder-color: #9aa5b4;
+        --placeholder-opacity: 0.8;
+      }
+      
+      .password-toggle {
+        font-size: 18px;
+        opacity: 0.6;
+        cursor: pointer;
+        padding: 8px;
+        
+        &:active {
+          opacity: 1;
+        }
+      }
+    }
+    
+    .forgot-password-container {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+      
+      .forgot-password {
+        font-size: 13px;
+        color: var(--ion-color-medium);
+        text-decoration: none;
+        transition: all 0.2s ease;
+        
+        &:hover {
+          color: var(--ion-color-primary);
+          transform: translateX(2px);
+        }
+      }
+    }
+    
+    .login-button {
+      --background: linear-gradient(135deg, #4a90e2 0%, #3976d2 100%);
+      --background-hover: linear-gradient(135deg, #3976d2 0%, #2d5ca8 100%);
+      --border-radius: 12px;
+      --box-shadow: 0 6px 15px rgba(74, 144, 226, 0.3);
+      font-weight: 600;
+      font-size: 16px;
+      height: 52px;
+      margin-top: 10px;
+      letter-spacing: 0.6px;
+      text-transform: none;
+      overflow: hidden;
+      position: relative;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+          rgba(255, 255, 255, 0) 0%, 
+          rgba(255, 255, 255, 0.2) 50%, 
+          rgba(255, 255, 255, 0) 100%);
+        transform: translateX(-100%);
+        transition: transform 0.6s ease;
+      }
+      
+      &:hover::before {
+        transform: translateX(100%);
+      }
+      
+      ion-icon {
+        margin-right: 8px;
+        font-size: 18px;
+      }
+    }
+  }
+  
+  .divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 25px 0;
+    
+    &::before,
+    &::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    span {
+      padding: 0 15px;
+      font-size: 12px;
+      color: #8795a9;
+      font-weight: 500;
+    }
+  }
+  
+  .social-login {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 25px;
+    
+    .social-button {
+      flex: 1;
+      --border-radius: 12px;
+      --border-color: #e1e5eb;
+      --border-width: 1px;
+      --color: #4a5568;
+      font-size: 14px;
+      font-weight: 500;
+      height: 48px;
+      
+      .social-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 8px;
+      }
+      
+      &.google {
+        --border-color: #ea4335;
+        --color: #ea4335;
+      }
+      
+      &.apple {
+        --border-color: #333;
+        --color: #333;
+      }
+    }
+  }
+  
+  .signup-link {
+    text-align: center;
+    font-size: 14px;
+    color: #64748b;
+    margin-top: 5px;
+    
+    a {
+      color: var(--ion-color-primary);
+      font-weight: 600;
+      text-decoration: none;
+      margin-left: 5px;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  ion-content {
+    --background: linear-gradient(135deg, #1a1c20 0%, #2a2d35 100%);
+    
+    form {
+      background: #2a2d35;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      
+      ion-item {
+        --background: #373a43;
+        
+        ion-icon {
+          color: #a0aec0;
+        }
+        
+        ion-input {
+          --placeholder-color: #8795a9;
+        }
+      }
+    }
+    
+    .logo-container {
+      .welcome-text {
+        color: #e2e8f0;
+      }
+      
+      .subtitle {
+        color: #a0aec0;
+      }
+    }
+    
+    .divider {
+      &::before,
+      &::after {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      span {
+        color: #a0aec0;
+      }
+    }
+    
+    .signup-link {
+      color: #a0aec0;
+    }
+  }
+}

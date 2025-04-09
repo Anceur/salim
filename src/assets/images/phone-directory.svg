@@ -1,0 +1,23 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="90" fill="url(#gradient)" />
+  
+  <!-- Phone icon -->
+  <path d="M70 60C70 55.5817 73.5817 52 78 52H122C126.418 52 130 55.5817 130 60V140C130 144.418 126.418 148 122 148H78C73.5817 148 70 144.418 70 140V60Z" fill="white" />
+  <rect x="85" y="140" width="30" height="4" rx="2" fill="#1740a7" />
+  <circle cx="100" cy="120" r="10" fill="#1740a7" />
+  
+  <!-- Phone book -->
+  <path d="M60 70H140V130H60V70Z" fill="white" />
+  <path d="M70 80H130V90H70V80Z" fill="#1740a7" opacity="0.2" />
+  <path d="M70 100H110V110H70V100Z" fill="#1740a7" opacity="0.2" />
+  <path d="M70 120H120V130H70V120Z" fill="#1740a7" opacity="0.2" />
+  
+  <!-- Gradient definition -->
+  <defs>
+    <linearGradient id="gradient" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1740a7" />
+      <stop offset="100%" stop-color="#5aabfc" />
+    </linearGradient>
+  </defs>
+</svg> 

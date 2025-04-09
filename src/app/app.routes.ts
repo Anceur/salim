@@ -3,8 +3,12 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home', // Redirect to home by default
+    redirectTo: 'loading', // Redirect to home by default
     pathMatch: 'full'
+  },
+  {
+    path: 'loading',
+    loadComponent: () => import('../environments/components/loading/loading.component').then(m => m.LoadingComponent)
   },
   {
     path: 'home',
@@ -25,5 +29,9 @@ export const routes: Routes = [
   {
     path: 'users',
     loadComponent: () => import('./modules/admin/users/users.page').then(m => m.UsersPage)
+  },  {
+    path: 'profile',
+    loadComponent: () => import('./modules/trader/profile/profile.page').then( m => m.ProfilePage)
   }
+
 ];
