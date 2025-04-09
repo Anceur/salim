@@ -22,7 +22,7 @@ import { PhoneService } from 'src/app/core/services/phone.service';
   standalone: true,
   imports: [
     IonLabel, IonButtons, IonIcon, IonContent, IonHeader, IonTitle, IonToolbar, 
-    IonInput, IonButton, IonList, IonItem, IonBadge, IonChip, CommonModule, FormsModule
+    IonInput, IonButton, IonList, IonItem, IonChip, CommonModule, FormsModule
   ]
 })
 export class HomePage implements OnInit {
@@ -42,16 +42,16 @@ export class HomePage implements OnInit {
   ) {
     // Add Ionic icons
     addIcons({
-      'call-outline': callOutline,
-      'search-outline': searchOutline,
-      'add-outline': addOutline,
-      'log-out-outline': logOutOutline,
-      'trash-outline': trashOutline,
-      'thumbs-up-outline': thumbsUpOutline,
-      'thumbs-down-outline': thumbsDownOutline,
-      'thumbs-up': thumbsUp,
-      'thumbs-down': thumbsDown,
-      'call': call
+      logOutOutline,
+      searchOutline,
+      callOutline,
+      addOutline,
+      trashOutline,
+      thumbsUpOutline,
+      thumbsDownOutline,
+      thumbsUp,
+      thumbsDown,
+      call
     });
   }
 
@@ -75,12 +75,12 @@ export class HomePage implements OnInit {
     }
 
     if (!this.newPhoneNumber.trim()) {
-      this.presentToast('الرجاء إدخال رقم هاتف');
+      this.presentToast('Veuillez entrer un numéro de téléphone');
       return;
     }
 
     const loading = await this.loadingCtrl.create({
-      message: 'جاري إضافة الرقم...',
+      message: 'Ajout du numéro en cours...',
     });
     await loading.present();
 
@@ -88,10 +88,10 @@ export class HomePage implements OnInit {
       await this.authService.addPhoneNumber(this.newPhoneNumber);
       this.newPhoneNumber = '';
       this.loadPhoneNumbers();
-      this.presentToast('تمت إضافة رقم الهاتف بنجاح');
+      this.presentToast('Numéro de téléphone ajouté avec succès');
     } catch (error: any) {
       console.error('Error adding phone number:', error);
-      this.presentToast(error.message || 'فشل في إضافة رقم الهاتف');
+      this.presentToast(error.message || 'Échec de l\'ajout du numéro de téléphone');
     } finally {
       loading.dismiss();
     }
@@ -127,17 +127,17 @@ export class HomePage implements OnInit {
 
   async deletePhoneNumber(item: any) {
     const loading = await this.loadingCtrl.create({
-      message: 'جاري الحذف...',
+      message: 'Suppression en cours...',
     });
     await loading.present();
 
     try {
       const phoneDocRef = doc(this.firestore, 'phoneNumbers', item.id);
       await deleteDoc(phoneDocRef);
-      this.presentToast('تم حذف رقم الهاتف');
+      this.presentToast('Numéro de téléphone supprimé');
     } catch (error: any) {
       console.error('Error deleting phone number:', error);
-      this.presentToast(error.message || 'فشل في حذف رقم الهاتف');
+      this.presentToast(error.message || 'Échec de la suppression du numéro de téléphone');
     } finally {
       loading.dismiss();
     }
@@ -150,18 +150,18 @@ export class HomePage implements OnInit {
     }
 
     const loading = await this.loadingCtrl.create({
-      message: 'جاري تقييم الرقم...',
+      message: 'Évaluation en cours...',
     });
     await loading.present();
 
     try {
       await this.phoneRatingService.ratePhoneNumber(phone.id, isValid);
-      this.presentToast('تم تقييم الرقم بنجاح');
+      this.presentToast('Numéro évalué avec succès');
       // Update in local array to refresh UI
       this.loadPhoneNumbers();
     } catch (error: any) {
       console.error('Error rating phone:', error);
-      this.presentToast(error.message || 'فشل في تقييم الرقم');
+      this.presentToast(error.message || 'Échec de l\'évaluation du numéro');
     } finally {
       loading.dismiss();
     }

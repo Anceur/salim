@@ -1,0 +1,17 @@
+<ion-content class="loading-container">
+  <div class="loading-wrapper">
+    <div class="animation-container">
+      <!-- Using GIF for animation instead of video -->
+      <img #animationGif 
+           src="../../../assets/pre-animation.gif" 
+           alt="Loading Animation"
+           (load)="onGifLoaded()" 
+           class="animation-gif" />
+      
+      <!-- Fallback animation -->
+      <div class="fallback-animation" *ngIf="showFallback">
+        <h1 class="app-title">Salim</h1>
+      </div>
+    </div>
+  </div>
+</ion-content> 

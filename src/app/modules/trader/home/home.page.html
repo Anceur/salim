@@ -1,10 +1,9 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>دليل الهواتف</ion-title>
-    <ion-buttons slot="end">
+    <ion-title>Accueil</ion-title>
+    <ion-buttons slot="start">
       <ion-button (click)="logout()">
         <ion-icon name="log-out-outline"></ion-icon>
-        تسجيل الخروج
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -12,24 +11,23 @@
 
 <ion-content class="ion-padding">
   <div class="input-section">
+    <div class="header-image">
+      <img src="assets/images/logo.png" alt="Phone Directory" class="feature-image">
+    </div>
+    
     <ion-item class="search-item">
       <ion-icon name="search-outline" slot="start"></ion-icon>
-      <ion-input [(ngModel)]="searchQuery" placeholder="البحث عن أرقام..."></ion-input>
-    </ion-item>
-    
-    <ion-item>
-      <ion-icon name="call-outline" slot="start"></ion-icon>
-      <ion-input [(ngModel)]="newPhoneNumber" placeholder="أدخل رقم الهاتف" type="tel" style="color: black;"></ion-input>
+      <ion-input [(ngModel)]="searchQuery" placeholder="Rechercher des numéros..."></ion-input>
     </ion-item>
     
     <ion-button expand="block" (click)="addPhoneNumber()" class="ion-margin-top">
-      <ion-icon name="add-outline" slot="start"></ion-icon>
-      إضافة رقم
+      <ion-icon name="call-outline" slot="start"></ion-icon>
+      Ajouter un numéro
     </ion-button>
   </div>
   
   <div class="phone-list ion-margin-top">
-    <h2>أرقام الهواتف</h2>
+    <h2>Numéros de Téléphone</h2>
     
     <ion-list *ngIf="filteredNumbers.length > 0">
       <ion-item *ngFor="let item of filteredNumbers">
@@ -38,13 +36,13 @@
           <h2>{{ item.number }}</h2>
           <div class="rating-stats">
             <ion-chip outline color="success">
-              <ion-label>صالح: {{ item.validRatings || 0 }}</ion-label>
+              <ion-label>Valide: {{ item.validRatings || 0 }}</ion-label>
             </ion-chip>
             <ion-chip outline color="danger">
-              <ion-label>غير صالح: {{ item.invalidRatings || 0 }}</ion-label>
+              <ion-label>Invalide: {{ item.invalidRatings || 0 }}</ion-label>
             </ion-chip>
             <ion-chip *ngIf="item.totalRatings > 0" outline color="primary">
-              <ion-label>التقييم الإجمالي: {{ item.totalRatings }}</ion-label>
+              <ion-label>Total: {{ item.totalRatings }}</ion-label>
             </ion-chip>
           </div>
         </ion-label>
@@ -77,7 +75,7 @@
     </ion-list>
     
     <div class="empty-state" *ngIf="filteredNumbers.length === 0">
-      <p>لم يتم العثور على أرقام هواتف</p>
+      <p>Aucun numéro de téléphone trouvé</p>
     </div>
   </div>
 </ion-content>

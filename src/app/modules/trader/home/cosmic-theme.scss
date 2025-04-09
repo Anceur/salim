@@ -1,6 +1,5 @@
-// Custom Theme Variables
+// Primary color palette - Cosmic theme
 :root {
-  // Primary color palette - Cosmic theme
   --cosmic-primary: #6C63FF; // Vibrant purple
   --cosmic-secondary: #00D9C0; // Turquoise
   --cosmic-accent: #FF9F8C; // Coral
@@ -36,28 +35,6 @@
   0% { box-shadow: 0 0 5px rgba(108, 99, 255, 0.5); }
   50% { box-shadow: 0 0 20px rgba(108, 99, 255, 0.8); }
   100% { box-shadow: 0 0 5px rgba(108, 99, 255, 0.5); }
-}
-
-@keyframes cosmicSpin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes cosmicWave {
-  0% { transform: translateX(0); }
-  50% { transform: translateX(10px); }
-  100% { transform: translateX(0); }
-}
-
-// Global Styles
-ion-app {
-  --ion-background-color: var(--cosmic-light);
-  --ion-text-color: var(--cosmic-text);
-  font-family: 'Poppins', sans-serif;
-  background-image: 
-    radial-gradient(circle at 10% 20%, rgba(108, 99, 255, 0.05) 0%, transparent 20%),
-    radial-gradient(circle at 90% 80%, rgba(0, 217, 192, 0.05) 0%, transparent 20%);
-  background-attachment: fixed;
 }
 
 // Custom Components
@@ -154,27 +131,6 @@ ion-app {
   }
 }
 
-.cosmic-list {
-  background: transparent;
-  padding: 16px;
-
-  ion-item {
-    background: white;
-    margin-bottom: 12px;
-    border-radius: var(--cosmic-radius);
-    --padding-start: 16px;
-    --padding-end: 16px;
-    --inner-padding-end: 16px;
-    border: var(--cosmic-border);
-    transition: all 0.3s ease;
-
-    &:hover {
-      transform: translateX(8px);
-      box-shadow: var(--cosmic-shadow);
-    }
-  }
-}
-
 // Custom Utility Classes
 .cosmic-float {
   animation: cosmicFloat 4s ease-in-out infinite;
@@ -186,14 +142,6 @@ ion-app {
 
 .cosmic-glow {
   animation: cosmicGlow 2s ease-in-out infinite;
-}
-
-.cosmic-spin {
-  animation: cosmicSpin 8s linear infinite;
-}
-
-.cosmic-wave {
-  animation: cosmicWave 3s ease-in-out infinite;
 }
 
 .cosmic-gradient-text {
@@ -210,99 +158,4 @@ ion-app {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-fill-color: transparent;
-}
-
-// Custom Layout
-.cosmic-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  position: relative;
-}
-
-.cosmic-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-  padding: 20px;
-}
-
-// Custom Navigation
-.cosmic-nav {
-  background: white;
-  border-radius: var(--cosmic-radius);
-  padding: 12px;
-  margin: 16px;
-  box-shadow: var(--cosmic-shadow);
-  border: var(--cosmic-border);
-
-  ion-tab-button {
-    --color: var(--cosmic-text);
-    --color-selected: var(--cosmic-primary);
-    --ripple-color: var(--cosmic-primary);
-    position: relative;
-    overflow: hidden;
-    
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      width: 0;
-      height: 3px;
-      background: var(--cosmic-gradient-primary);
-      transition: all 0.3s ease;
-      transform: translateX(-50%);
-    }
-    
-    &.tab-selected::after {
-      width: 80%;
-    }
-  }
-}
-
-// Custom Badge
-.cosmic-badge {
-  background: var(--cosmic-gradient-secondary);
-  color: white;
-  border-radius: 50px;
-  padding: 4px 12px;
-  font-size: 12px;
-  font-weight: 600;
-  display: inline-block;
-  box-shadow: 0 4px 10px rgba(255, 159, 140, 0.3);
-}
-
-// Custom Divider
-.cosmic-divider {
-  height: 1px;
-  background: var(--cosmic-gradient-primary);
-  margin: 24px 0;
-  position: relative;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: -4px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--cosmic-primary);
-  }
-}
-
-// Custom Icon
-.cosmic-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--cosmic-gradient-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  margin-bottom: 16px;
-  box-shadow: 0 4px 10px rgba(108, 99, 255, 0.3);
-}
+} 
