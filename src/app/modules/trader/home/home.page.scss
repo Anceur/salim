@@ -11,7 +11,8 @@ ion-header {
   ion-toolbar {
     --background: #f9fafb;
     --border-width: 0;
-    --padding-top: 25px;
+    --padding-top: 20px;
+    --padding-bottom: 20px;
     
     ion-title {
       color: rgb(0, 0, 0);
@@ -22,6 +23,80 @@ ion-header {
   }
 }
 
+/* Profile Menu & Avatar Styling */
+ion-header ion-toolbar {
+  --background: #ffffff;
+  --border-color: rgba(23, 64, 167, 0.1);
+  box-shadow: 0 2px 8px rgba(23, 64, 167, 0.08);
+}
+
+ion-header ion-title {
+  color: #1740a7;
+  font-weight: 600;
+}
+
+/* Profile Avatar Button */
+ion-buttons ion-button#profile-trigger {
+  --padding-start: 8px;
+  --padding-end: 8px;
+  height: 42px;
+  width: 42px;
+  margin-right: 8px;
+}
+
+ion-buttons ion-avatar {
+  width: 32px;
+  height: 32px;
+  border: 2px solid #5aabfc;
+  box-shadow: 0 2px 6px rgba(90, 171, 252, 0.2);
+  transition: transform 0.2s ease;
+}
+
+ion-buttons ion-button:active ion-avatar {
+  transform: scale(0.95);
+}
+
+/* Dropdown Menu Styling */
+ion-popover {
+  --width: 220px;
+  --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --backdrop-opacity: 0.05;
+}
+
+ion-popover ion-list {
+  padding: 4px;
+}
+
+ion-popover ion-item {
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+  --min-height: 48px;
+  --border-radius: 8px;
+  --background-hover: rgba(90, 171, 252, 0.08);
+  margin-bottom: 2px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+ion-popover ion-item ion-icon {
+  margin-right: 12px;
+  font-size: 18px;
+}
+
+/* General App Styling */
+.input-section {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(23, 64, 167, 0.05);
+}
+
+.header-image {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
 
 .input-section {
   background-color: #ffffff;
@@ -93,7 +168,7 @@ ion-header {
   }
 }
 
-.search-item {
+.search-item, ion-item:has(ion-input[type="tel"]) {
   --border-radius: 50px;
   --background: #ffffff;
   --border-color: rgba(99, 101, 241, 0.523);
@@ -292,4 +367,121 @@ ion-header {
       flex-direction: column;
     }
   }
+  /* Add this to your home.page.scss file */
+
+.feature-image {
+  width: 120px;
+  height: auto;
+  margin: 0 auto 20px;
+  display: block;
+}
+
+.header-image {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.search-item {
+  --border-radius: 8px;
+  margin-bottom: 16px;
+  --background: #f5f5f5;
+}
+
+.input-section {
+  margin-bottom: 20px;
+}
+
+.search-prompt {
+  margin-top: 50px;
+  opacity: 0.6;
+  
+  .large-icon {
+    font-size: 64px;
+    opacity: 0.3;
+  }
+  
+  p {
+    margin-top: 16px;
+    font-size: 16px;
+  }
+}
+
+.phone-list {
+  h2 {
+    font-size: 20px;
+    margin-bottom: 16px;
+    color: var(--ion-color-primary);
+  }
+}
+
+.rating-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  
+  ion-chip {
+    margin: 0;
+  }
+}
+
+.rating-actions {
+  display: flex;
+  
+  ion-button {
+    margin: 0 4px;
+    
+    &.active-rating {
+      --color: var(--ion-color-primary);
+    }
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 0;
+  color: var(--ion-color-medium);
+}
+
+/* Rating box styles */
+.rating-box {
+  margin-top: 1rem;
+  border-radius: 16px;
+  background-color: #f8f8f8;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+
+  p {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #555;
+  }
+
+  ion-button {
+    margin-bottom: 0.75rem;
+    --border-radius: 8px;
+    
+    &[color="success"] {
+      --background: #2dd36f;
+    }
+    
+    &[color="danger"] {
+      --background: #eb445a;
+    }
+  }
+  
+  ion-item {
+    --background: #ffffff;
+    --border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+}
 }

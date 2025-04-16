@@ -28,52 +28,53 @@
       <!-- Step 1: User Information -->
       <div *ngIf="currentStep === 1" class="form-section">
         <!-- Personal Information Section -->
-      <div class="form-section">
-        <div class="form-row">
-
-          <ion-item>
-            <ion-input [(ngModel)]="firstName" name="firstName" placeholder="First Name" type="text" required></ion-input>
-          </ion-item>
+        <div class="form-section">
+          <div class="form-row">
+            <ion-item>
+              <ion-input [(ngModel)]="firstName" name="firstName" placeholder="First Name" type="text" required></ion-input>
+            </ion-item>
+            
+            <ion-item>
+              <ion-input [(ngModel)]="lastName" name="lastName" placeholder="Last Name" type="text" required></ion-input>
+            </ion-item>
+          </div>
           
           <ion-item>
-            <ion-input [(ngModel)]="lastName" name="lastName" placeholder="Last Name" type="text" required></ion-input>
+            <ion-icon name="mail-outline" slot="start"></ion-icon>
+            <ion-input [(ngModel)]="email" name="email" placeholder="Email" type="email" required></ion-input>
+          </ion-item>
+          
+          <ion-item [class.ion-invalid]="!isPhoneNumberValid">
+            <ion-icon name="call-outline" slot="start"></ion-icon>
+            <ion-input [(ngModel)]="phoneNumber" name="phoneNumber" placeholder="Phone Number" type="tel" required 
+                      (ionBlur)="validatePhoneNumber()"></ion-input>
+          </ion-item>
+          <div *ngIf="!isPhoneNumberValid" class="error-message">
+            {{ phoneNumberError }}
+          </div>
+          
+          <ion-item>
+            <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+            <ion-input [(ngModel)]="password" name="password" placeholder="Password" type="password" required></ion-input>
+            <ion-icon name="eye-outline" slot="end" class="password-toggle"></ion-icon>
+          </ion-item>
+          
+          <!-- Location Information Section -->
+          <ion-item>
+            <ion-icon name="map-outline" slot="start"></ion-icon>
+            <ion-input [(ngModel)]="wilaya" name="wilaya" placeholder="Wilaya" type="text" required></ion-input>
           </ion-item>
         </div>
-        
-        <ion-item>
-          <ion-icon name="mail-outline" slot="start"></ion-icon>
-          <ion-input [(ngModel)]="email" name="email" placeholder="Email" type="email" required></ion-input>
-        </ion-item>
-        
-        <ion-item>
-          <ion-icon name="call-outline" slot="start"></ion-icon>
-          <ion-input [(ngModel)]="phoneNumber" name="phoneNumber" placeholder="Phone Number" type="tel" required></ion-input>
-        </ion-item>
-        
-        <ion-item>
-          <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
-          <ion-input [(ngModel)]="password" name="password" placeholder="Password" type="password" required></ion-input>
-          <ion-icon name="eye-outline" slot="end" class="password-toggle"></ion-icon>
-        </ion-item>
-              <!-- Location Information Section -->
-        <ion-item>
-          <ion-icon name="map-outline" slot="start"></ion-icon>
-          <ion-input [(ngModel)]="wilaya" name="wilaya" placeholder="Wilaya" type="text" required></ion-input>
-        </ion-item>
-      </div>
 
-
-      <div class="terms-container">
-        <ion-checkbox [(ngModel)]="agreeTerms" name="agreeTerms"></ion-checkbox>
-        <span class="terms-text">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
-      </div>
+        <div class="terms-container">
+          <ion-checkbox [(ngModel)]="agreeTerms" name="agreeTerms"></ion-checkbox>
+          <span class="terms-text">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+        </div>
       </div>
 
       <!-- Step 2: Business Information -->
       <div *ngIf="currentStep === 2" class="form-section">
-
-      <!-- Business Information Section -->
-
+        <!-- Business Information Section -->
         <ion-item>
           <ion-icon name="briefcase-outline" slot="start"></ion-icon>
           <ion-input [(ngModel)]="businessName" name="businessName" placeholder="Business Name" type="text" required></ion-input>
@@ -86,16 +87,23 @@
 
       <!-- Step 3: Proof of Business -->
       <div *ngIf="currentStep === 3" class="form-section">
-
-        <ion-item>
+        <ion-item class="file-upload-item">
+          <div class="custom-file-upload">
+            <img src="../../../../assets/images/upload.png" alt="Upload Icon" class="upload-image" />
+            <input type="file" (change)="onFileSelected($event)" accept="image/*" class="file-input" />
+          </div>
           <ion-label>Upload Proof of Business</ion-label>
-          <input type="file" (change)="onFileSelected($event)" accept="image/*" />
         </ion-item>
-        <div *ngIf="selectedFile">
-          <p>Selected file: {{selectedFile.name}}</p>
+      
+        <div *ngIf="selectedFile" class="file-preview">
+          <div class="file-info">
+            <ion-icon name="document-text-outline"></ion-icon>
+            <span class="file-name">{{ selectedFile.name }}</span>
+            <span class="file-size">({{ selectedFile.size | number }} bytes)</span>
+          </div>
         </div>
-      </div>
-
+      </div>   
+    
       <div class="navigation-buttons">
         <ion-button fill="outline" class="back-button" (click)="goToPreviousStep()" *ngIf="currentStep > 1">
           Back
@@ -112,7 +120,7 @@
     </form>
 
     <div class="login-link">
-      Already have an account? <a routerLink="/logzin">Log In</a>
+      Already have an account? <a routerLink="/login">Log In</a>
     </div>
   </div>
 </ion-content>

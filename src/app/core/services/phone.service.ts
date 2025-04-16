@@ -61,6 +61,32 @@ export class PhoneService {
     }
   }
 
+  // Add method to handle phone comments
+  async addPhoneComment(phoneId: string, comment: string) {
+    try {
+      const currentUserId = this.auth.currentUser?.uid;
+      
+      if (!currentUserId) {
+        throw new Error('User not authenticated');
+      }
+
+      // Add comment to a comments collection
+      const commentsRef = collection(this.firestore, 'phoneComments');
+      
+      await setDoc(doc(commentsRef), {
+        phoneId: phoneId,
+        userId: currentUserId,
+        comment: comment,
+        createdAt: new Date()
+      });
+      
+      return { success: true };
+    } catch (error) {
+      console.error('Error adding phone comment:', error);
+      throw error;
+    }
+  }
+
   async updatePhoneRatingStats(phoneId: string) {
     try {
       // Get all ratings for this phone
@@ -166,6 +192,30 @@ export class PhoneService {
       };
     } catch (error) {
       console.error('Error getting user rating:', error);
+      throw error;
+    }
+  }
+
+  // Add method to get comments for a phone number
+  async getPhoneComments(phoneId: string) {
+    try {
+      const commentsRef = collection(this.firestore, 'phoneComments');
+      const q = query(commentsRef, where('phoneId', '==', phoneId));
+      
+      const querySnapshot = await getDocs(q);
+      
+      const comments: any[] = [];
+      
+      querySnapshot.forEach(doc => {
+        comments.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+      
+      return comments;
+    } catch (error) {
+      console.error('Error getting phone comments:', error);
       throw error;
     }
   }

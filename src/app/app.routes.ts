@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import{adminGuard} from './guards/admin.guard'
 
 export const routes: Routes = [
   {
@@ -24,14 +25,32 @@ export const routes: Routes = [
   },
   {
     path: 'requests',
-    loadComponent: () => import('./modules/admin/requests/requests.page').then(m => m.RequestsPage)
+    loadComponent: () => import('./modules/admin/requests/requests.page').then(m => m.RequestsPage),
+    // canActivate: [adminGuard]
+  },
+  {
+    path: 'settings',
+    loadComponent: () => import('./modules/admin/settings/settings.page').then(m => m.SettingsPage),
+    // canActivate: [adminGuard]
   },
   {
     path: 'users',
-    loadComponent: () => import('./modules/admin/users/users.page').then(m => m.UsersPage)
-  },  {
+    loadComponent: () => import('./modules/admin/users/users.page').then(m => m.UsersPage),
+    // canActivate: [adminGuard]
+  },
+  {
     path: 'profile',
     loadComponent: () => import('./modules/trader/profile/profile.page').then( m => m.ProfilePage)
+  },
+  {
+    path: 'home',
+    loadComponent: () => import('./modules/trader/home/home.page').then( m => m.HomePage)
+  },
+  {
+    path: 'settings',
+    loadComponent: () => import('./modules/admin/settings/settings.page').then( m => m.SettingsPage)
   }
+
+
 
 ];

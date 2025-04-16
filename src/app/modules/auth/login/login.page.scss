@@ -304,3 +304,53 @@ ion-content {
     }
   }
 }
+
+// Back button styling
+ion-back-button {
+  --color: var(--ion-color-primary);
+  --icon-color: var(--ion-color-primary);
+  --icon-font-size: 24px;
+  --icon-margin-end: 8px;
+  --icon-padding-start: 8px;
+  --icon-padding-end: 8px;
+  --min-height: 44px;
+  --min-width: 44px;
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --ripple-color: rgba(var(--ion-color-primary-rgb), 0.2);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: rgba(var(--ion-color-primary-rgb), 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.3s ease;
+  }
+
+  &:active::after {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .button-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  ion-icon {
+    transition: transform 0.3s ease;
+  }
+
+  &:active ion-icon {
+    transform: translateX(-4px);
+  }
+}

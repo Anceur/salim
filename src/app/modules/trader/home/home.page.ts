@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonInput, IonButton, IonList, IonItem, 
-  LoadingController, ToastController, IonIcon, IonButtons, IonLabel, IonBadge, IonChip } from '@ionic/angular/standalone';
+  LoadingController, ToastController, IonIcon, IonButtons, IonLabel, IonBadge, IonChip, IonPopover, IonAvatar } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Firestore, collection, addDoc, collectionData, deleteDoc, doc, updateDoc } from '@angular/fire/firestore';
 import { query, where } from 'firebase/firestore';
@@ -11,8 +11,8 @@ import { AuthService } from '../../../core/services/auth.service';
 import { addIcons } from 'ionicons';
 import { 
   callOutline, searchOutline, addOutline, logOutOutline, trashOutline, 
-  thumbsUpOutline, thumbsDownOutline, thumbsUp, thumbsDown, call 
-} from 'ionicons/icons';
+  thumbsUpOutline, thumbsDownOutline, thumbsUp, thumbsDown, call, personOutline, settingsOutline, 
+  logInOutline, search, closeCircleOutline } from 'ionicons/icons';
 import { PhoneService } from 'src/app/core/services/phone.service';
 
 @Component({
@@ -20,7 +20,7 @@ import { PhoneService } from 'src/app/core/services/phone.service';
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [
+  imports: [IonAvatar, IonPopover, 
     IonLabel, IonButtons, IonIcon, IonContent, IonHeader, IonTitle, IonToolbar, 
     IonInput, IonButton, IonList, IonItem, IonChip, CommonModule, FormsModule
   ]
@@ -32,6 +32,12 @@ export class HomePage implements OnInit {
   isLogin = false;
   private firestore: Firestore = inject(Firestore);
   private auth: Auth = inject(Auth);
+  isAuthenticated: boolean = false;
+  
+  // Properties for the evaluation dialog
+  showEvaluation: boolean = false;
+  comment: string = '';
+  phoneToEvaluate: string = '';
   
   constructor(
     private router: Router,
@@ -42,32 +48,37 @@ export class HomePage implements OnInit {
   ) {
     // Add Ionic icons
     addIcons({
-      logOutOutline,
-      searchOutline,
-      callOutline,
-      addOutline,
-      trashOutline,
-      thumbsUpOutline,
-      thumbsDownOutline,
-      thumbsUp,
-      thumbsDown,
-      call
+      personOutline, settingsOutline, logOutOutline, searchOutline, callOutline, call, 
+      trashOutline, addOutline, thumbsUpOutline, thumbsDownOutline, thumbsUp, thumbsDown, 
+      logInOutline, search, closeCircleOutline
     });
   }
 
   ngOnInit() {
     this.checkLoginStatus();
+    this.isAuthenticated = this.authService.isAuthenticated();
+  
+    this.authService.authState.subscribe(state => {
+      this.isAuthenticated = state;
+    });
+    
+    // Reset search query
+    this.searchQuery = '';
+    
+    // Load phone numbers regardless of login state
+    this.loadPhoneNumbers();
   }
-
+  
   checkLoginStatus() {
     this.auth.onAuthStateChanged(user => {
       this.isLogin = !!user;
-      if (this.isLogin) {
-        this.loadPhoneNumbers();
-      }
     });
   }
 
+  clearSearch() {
+    this.searchQuery = '';
+  }
+  
   async addPhoneNumber() {
     if (!this.isLogin) {
       this.router.navigate(['/login']);
@@ -79,28 +90,74 @@ export class HomePage implements OnInit {
       return;
     }
 
+    // Check if phone number already exists
+    try {
+      const isUnique = await this.authService.isPhoneNumberUnique(this.newPhoneNumber);
+      if (!isUnique) {
+        this.presentToast('Ce numéro de téléphone existe déjà');
+        return;
+      }
+      
+      // Show evaluation dialog instead of immediately adding the number
+      this.phoneToEvaluate = this.newPhoneNumber;
+      this.showEvaluation = true;
+      
+    } catch (error: any) {
+      console.error('Error checking phone number:', error);
+      this.presentToast(error.message || 'Erreur lors de la vérification du numéro');
+    }
+  }
+
+  // Handle evaluation submission
+  async submitEvaluation(isValid: boolean) {
     const loading = await this.loadingCtrl.create({
       message: 'Ajout du numéro en cours...',
     });
     await loading.present();
 
     try {
-      await this.authService.addPhoneNumber(this.newPhoneNumber);
+      // First add the phone number
+      const result = await this.authService.addPhoneNumber(this.phoneToEvaluate);
+      
+      // Wait for the phone number to be loaded again to get its ID
+      await this.loadPhoneNumbers();
+      
+      // Find the newly added phone in the loaded phones
+      const addedPhone = this.phoneNumbers.find(p => p.number === this.phoneToEvaluate);
+      
+      if (addedPhone && addedPhone.id) {
+        // Rate the phone number
+        await this.phoneRatingService.ratePhoneNumber(addedPhone.id, isValid);
+      }
+      
+      // Reset form and hide dialog
       this.newPhoneNumber = '';
-      this.loadPhoneNumbers();
-      this.presentToast('Numéro de téléphone ajouté avec succès');
+      this.phoneToEvaluate = '';
+      this.comment = '';
+      this.showEvaluation = false;
+      
+      this.presentToast('Numéro de téléphone ajouté et évalué avec succès');
     } catch (error: any) {
-      console.error('Error adding phone number:', error);
+      console.error('Error adding and evaluating phone number:', error);
       this.presentToast(error.message || 'Échec de l\'ajout du numéro de téléphone');
     } finally {
       loading.dismiss();
     }
   }
 
+  // Cancel evaluation and close dialog
+  cancelEvaluation() {
+    this.showEvaluation = false;
+    this.phoneToEvaluate = '';
+    this.comment = '';
+  }
+
   async loadPhoneNumbers() {
+    console.log('Loading phone numbers...');
     const phonesRef = collection(this.firestore, 'phoneNumbers');
-    const q = query(phonesRef, where('userId', '==', this.auth.currentUser?.uid));
-    collectionData(q, { idField: 'id' }).subscribe(async (data: any) => {
+    // Remove the filter to get all phone numbers instead of just the current user's
+    collectionData(phonesRef, { idField: 'id' }).subscribe(async (data: any) => {
+      console.log('Data received:', data);
       // Get ratings for each phone number
       const phonesWithRatings = await Promise.all(data.map(async (phone: any) => {
         // Initialize ratings if not present
@@ -122,6 +179,7 @@ export class HomePage implements OnInit {
       }));
       
       this.phoneNumbers = phonesWithRatings;
+      console.log('Phone numbers loaded:', this.phoneNumbers);
     });
   }
 
@@ -168,8 +226,13 @@ export class HomePage implements OnInit {
   }
 
   get filteredNumbers() {
+    if (!this.searchQuery || this.searchQuery.trim() === '') {
+      return []; // Return empty array when search is empty
+    }
+    
+    const query = this.searchQuery.toLowerCase().trim();
     return this.phoneNumbers.filter(item => 
-      item.number.toLowerCase().includes(this.searchQuery.toLowerCase())
+      item.number && item.number.toString().toLowerCase().includes(query)
     );
   }
 
@@ -186,13 +249,19 @@ export class HomePage implements OnInit {
     this.authService.logout();
   }
 
-  // Helper method to determine if user has already rated this phone as valid
   hasValidRating(phone: any): boolean {
     return phone.userRating && phone.userRating.isValid === true;
   }
 
-  // Helper method to determine if user has already rated this phone as invalid
   hasInvalidRating(phone: any): boolean {
     return phone.userRating && phone.userRating.isValid === false;
+  }
+
+  goToLogin(){
+    this.router.navigate(['/login']);
+  }
+
+  goProfil(){
+    this.router.navigate(['/profile']);
   }
 }
