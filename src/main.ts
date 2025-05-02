@@ -6,7 +6,7 @@ import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 
-
+import { provideStorage, getStorage } from '@angular/fire/storage'; 
 import {provideFirebaseApp, initializeApp} from '@angular/fire/app';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { environment } from './environments/environment.prod';
@@ -23,6 +23,7 @@ bootstrapApplication(AppComponent, {
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
+    provideStorage(() => getStorage()), 
     PhoneService, 
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),

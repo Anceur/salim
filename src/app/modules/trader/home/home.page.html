@@ -1,20 +1,17 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Accueil</ion-title>
-    
-    <!-- Profile Icon with Dropdown Menu -->
-    <ion-buttons slot="end">
+<ion-content >
+
+  <!-- Header -->
+  <div class="custom-header">
+    <h1 class="page-title">MOUDIR<br>LIST</h1>
+    <div class="profile-container">
       <ion-button id="profile-trigger">
-        <ion-avatar>
-          <img src="assets/images/logo.png" alt="Profile">
-        </ion-avatar>
+        <img src="assets/icon/profile.png" alt="Profil" class="profile-image">
       </ion-button>
-      
-      <ion-popover trigger="profile-trigger" dismissOnSelect="true" side="bottom" alignment="end" [keepContentsMounted]="true">        <ng-template>
+      <ion-popover trigger="profile-trigger" dismissOnSelect="true" side="bottom" [keepContentsMounted]="true">
+        <ng-template>
           <ion-list lines="none">
-            <!-- Afficher ces options uniquement si l'utilisateur est connecté -->
             <ng-container *ngIf="isAuthenticated">
-              <ion-item button detail="false" (click)="goProfil()">
+              <ion-item button detail="false" (click)="goProfile()">
                 <ion-icon slot="start" name="person-outline" color="primary"></ion-icon>
                 <ion-label>Mon Profil</ion-label>
               </ion-item>
@@ -23,11 +20,8 @@
                 <ion-label>Déconnexion</ion-label>
               </ion-item>
             </ng-container>
-            
-            <!-- Afficher cette option uniquement si l'utilisateur n'est pas connecté -->
             <ng-container *ngIf="!isAuthenticated">
-              <ion-item button detail="false" (click)="goToLogin()" tabindex="-1">
-
+              <ion-item button detail="false"(click)="goLogin()" >
                 <ion-icon slot="start" name="log-in-outline" color="primary"></ion-icon>
                 <ion-label>Se connecter</ion-label>
               </ion-item>
@@ -35,73 +29,67 @@
           </ion-list>
         </ng-template>
       </ion-popover>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content class="ion-padding">
-  <div class="input-section">
-    <div class="header-image">
-      <img src="assets/images/logo.png" alt="Phone Directory" class="feature-image">
     </div>
-    
+  </div>
+
+  <!-- Logo + Search -->
+  <div class="cool-container">
+    <img src="assets/images/logo.png" alt="Répertoire Téléphonique" class="feature-image" style="width: 100%; height: auto;">
+
     <ion-item class="search-item">
-      <ion-icon name="search-outline" slot="start"></ion-icon>
       <ion-input [(ngModel)]="searchQuery" placeholder="Rechercher des numéros..."></ion-input>
-      <ion-button *ngIf="searchQuery && searchQuery.trim() !== ''" fill="clear" slot="end" (click)="clearSearch()">
-        <ion-icon name="close-circle-outline"></ion-icon>
-      </ion-button>
     </ion-item>
 
-    <ion-item>
-      <ion-label position="floating">Numéro de téléphone</ion-label>
-      <ion-input [(ngModel)]="newPhoneNumber" type="tel"></ion-input>
-    </ion-item>
-    
-    <ion-button expand="block" (click)="addPhoneNumber()" class="ion-margin-top">
-      <ion-icon name="call-outline" slot="start"></ion-icon>
+    <!-- Buttons -->
+    <ion-button expand="block" (click)="openEvaluationDialog()" class="ion-margin-top add-number-btn" >
+      <ion-icon name="add-outline" slot="start"></ion-icon>
       Ajouter un numéro
     </ion-button>
-  
 
-    <!-- Dialog d'évaluation qui apparaît uniquement quand showEvaluation = true -->
-    <div *ngIf="showEvaluation" class="rating-box ion-padding">
-      <h2>Phone Number Evaluation</h2>
-      <p>When evaluating a number, provide two options:</p>
-  
-      <!-- Bouton Succès -->
-      <ion-button color="success" expand="full" (click)="submitEvaluation(true)">
-        ✅ Successful Order
-      </ion-button>
-  
-      <!-- Bouton Refusé -->
-      <ion-button color="danger" expand="full" (click)="submitEvaluation(false)">
-        ❌ Order Refused
-      </ion-button>
-  
-      <!-- Champ commentaire -->
-      <ion-item>
-        <ion-input placeholder="Comment (optional)" [(ngModel)]="comment"></ion-input>
-      </ion-item>
-  
-      <!-- Bouton annuler -->
-      <ion-button fill="clear" color="medium" (click)="cancelEvaluation()">Cancel</ion-button>
-    </div>
-  
+    <ion-button expand="block" class="ion-margin-top checkout-btn"  (click)="searchPhoneNumber()">
+      <ion-icon name="search-outline" slot="start"></ion-icon>
+      Vérifier un numéro
+    </ion-button>
   </div>
-  
-  <!-- Message when no search is active -->
-  <div class="search-prompt ion-text-center ion-padding" *ngIf="!searchQuery || searchQuery.trim() === ''">
-    <ion-icon name="search" class="large-icon"></ion-icon>
-    <p>Entrez un numéro de téléphone pour rechercher</p>
+
+  <!-- Modal for Add Number -->
+  <ion-modal [isOpen]="showEvaluation" (didDismiss)="cancelEvaluation()" class="custom-eval-modal">
+    <ng-template>
+      <div class="rating-box ion-padding">
+        <button class="close-btn" (click)="cancelEvaluation()" aria-label="Fermer">
+          <ion-icon name="close-circle-outline"></ion-icon>
+        </button>
+        <h2>Évaluer un client</h2>
+
+        <ion-item class="modern-input">
+          <ion-input [(ngModel)]="phoneToEvaluate" placeholder="Numéro de téléphone"></ion-input>
+        </ion-item>
+
+        <ion-item class="modern-input">
+          <ion-input [(ngModel)]="comment" placeholder="Commentaire (optionnel)"></ion-input>
+        </ion-item>
+
+        <div class="eval-btns">
+          <ion-button fill="clear" color="success" expand="full" (click)="submitEvaluation(true)">✅ Valide</ion-button>
+          <ion-button fill="clear" color="danger" expand="full" (click)="submitEvaluation(false)">❌ Invalide</ion-button>
+          <ion-button fill="clear" color="medium" (click)="cancelEvaluation()">Annuler</ion-button>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Search prompt if no search done -->
+  <div class="search-prompt ion-text-center ion-padding" *ngIf="showSearchPrompt && (!searchQuery || searchQuery.trim() === '')">
+    <img src="assets/images/noresult.png" alt="Icône de recherche" class="large-icon">
+    <p>Aaaah! Vous n'avez pas encore effectué de recherche!</p>
   </div>
-  
-  <!-- Phone list - Only shown when search is active -->
-  <div class="phone-list ion-margin-top" *ngIf="searchQuery && searchQuery.trim() !== ''">
+
+  <!-- Search Results -->
+  <div class="phone-list ion-margin-top" *ngIf="filteredNumbers.length > 0">
     <h2>Résultats de recherche</h2>
-    
-    <ion-list *ngIf="filteredNumbers.length > 0">
-      <ion-item *ngFor="let item of filteredNumbers">
+
+    <ion-list>
+      <ion-item *ngFor="let item of filteredNumbers; let i = index" [style.animation-delay]="i * 100 + 'ms'">
         <ion-icon name="call" slot="start"></ion-icon>
         <ion-label>
           <h2>{{ item.number }}</h2>
@@ -113,35 +101,12 @@
               <ion-label>Invalide: {{ item.invalidRatings || 0 }}</ion-label>
             </ion-chip>
             <ion-chip *ngIf="item.totalRatings > 0" outline color="primary">
-              <ion-label>Total: {{ item.totalRatings }}</ion-label>
+              <ion-label>Total: {{ item.totalRatings || 0 }}</ion-label>
             </ion-chip>
           </div>
         </ion-label>
-        
-        <div class="rating-actions" slot="end">
-          <!-- Valid Rating Button -->
-          <ion-button 
-            fill="clear" 
-            color="success" 
-            (click)="ratePhone(item, true)" 
-            [class.active-rating]="hasValidRating(item)">
-            <ion-icon [name]="hasValidRating(item) ? 'thumbs-up' : 'thumbs-up-outline'"></ion-icon>
-          </ion-button>
-          
-          <!-- Invalid Rating Button -->
-          <ion-button 
-            fill="clear" 
-            color="danger" 
-            (click)="ratePhone(item, false)"
-            [class.active-rating]="hasInvalidRating(item)">
-            <ion-icon [name]="hasInvalidRating(item) ? 'thumbs-down' : 'thumbs-down-outline'"></ion-icon>
-          </ion-button>
-        </div>
       </ion-item>
     </ion-list>
-    
-    <div class="empty-state" *ngIf="filteredNumbers.length === 0">
-      <p>Aucun résultat trouvé pour votre recherche</p>
-    </div>
   </div>
+
 </ion-content>

@@ -1,0 +1,97 @@
+<ion-content>
+  <ion-button slot="start">
+    <ion-back-button defaultHref="/profile"></ion-back-button>
+  </ion-button>
+
+  <div class="edit-profile-container">
+    <div class="edit-header">
+      <h1>Modification du Profil</h1>
+      <p>Mettez à jour vos informations personnelles</p>
+    </div>
+
+    <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+      <!-- Personal Info Section -->
+      <div class="form-section">
+        <div class="section-header">
+          <h2>Personneles Informations</h2>
+        </div>
+
+        <div class="form-group">
+          <ion-item>
+            <ion-label position="floating">Prénom</ion-label>
+            <ion-input formControlName="firstName" type="text"></ion-input>
+          </ion-item>
+          <div class="error-message" *ngIf="submitted && f['firstName'].errors">
+            <span *ngIf="f['firstName'].errors['required']">Le prénom est requis</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <ion-item>
+            <ion-label position="floating">Nom</ion-label>
+            <ion-input formControlName="lastName" type="text"></ion-input>
+          </ion-item>
+          <div class="error-message" *ngIf="submitted && f['lastName'].errors">
+            <span *ngIf="f['lastName'].errors['required']">Le nom est requis</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <ion-item>
+            <ion-label position="floating">Téléphone</ion-label>
+            <ion-input formControlName="phoneNumber" type="tel"></ion-input>
+          </ion-item>
+          <div class="error-message" *ngIf="submitted && f['phoneNumber'].errors">
+            <span *ngIf="f['phoneNumber'].errors['required']">Le numéro de téléphone est requis</span>
+            <span *ngIf="f['phoneNumber'].errors['pattern']">Format de téléphone invalide</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Business Info Section -->
+      <div class="form-section">
+        <div class="section-header">
+          <h2>Boutique</h2>
+        </div>
+
+        <div class="form-group">
+          <ion-item>
+            <ion-label position="floating">Nom de l'entreprise</ion-label>
+            <ion-input formControlName="businessName" type="text"></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="form-group">
+          <ion-item>
+            <ion-label position="floating">Secteur d'activité</ion-label>
+            <ion-input formControlName="businessField" type="text"></ion-input>
+          </ion-item>
+        </div>
+      </div>
+
+      <!-- Address Section -->
+      <div class="form-section">
+        <div class="section-header">
+          <h2>Adresse</h2>
+        </div>
+
+        <div class="form-group">
+          <ion-item>
+            <ion-label position="floating">Wilaya</ion-label>
+            <ion-input formControlName="wilaya" type="text"></ion-input>
+          </ion-item>
+        </div>
+      </div>
+
+    
+      <div class="form-actions">
+        <ion-button type="submit" expand="block">
+          Enregistrer les modifications
+        </ion-button>
+        <ion-button class="annuler" type="button" expand="block" fill="outline" (click)="cancel()">
+          Annuler
+        </ion-button>
+      </div>
+    </form>
+  </div>
+</ion-content>

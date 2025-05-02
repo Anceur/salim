@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import{adminGuard} from './guards/admin.guard'
+// import{adminGuard} from './guards/admin.guard'
 
 export const routes: Routes = [
   {
@@ -9,7 +9,7 @@ export const routes: Routes = [
   },
   {
     path: 'loading',
-    loadComponent: () => import('../environments/components/loading/loading.component').then(m => m.LoadingComponent)
+    loadComponent: () => import('./shared/loading/loading.page').then(m => m.LoadingPage)
   },
   {
     path: 'home',
@@ -49,7 +49,16 @@ export const routes: Routes = [
   {
     path: 'settings',
     loadComponent: () => import('./modules/admin/settings/settings.page').then( m => m.SettingsPage)
-  }
+  },  {
+    path: 'editer',
+    loadComponent: () => import('./modules/trader/editer/editer.page').then( m => m.EditerPage)
+  },
+  {
+    path: 'historic',
+    loadComponent: () => import('./modules/trader/historic/historic.page').then( m => m.HistoricPage)
+  },
+
+  
 
 
 

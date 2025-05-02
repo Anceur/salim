@@ -1,0 +1,72 @@
+.loading-container {
+    --background: #E3EFFD; /* Set black background for animation */
+  }
+  
+  .loading-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .animation-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  
+  .animation-gif {
+    max-width: 60%;
+    max-height: 60%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+  }
+  
+  .fallback-animation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    background-color: var(--ion-color-primary);
+    color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10; /* Ensure fallback appears above GIF */
+  }
+  
+  .logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0; /* Start with 0 opacity for animation */
+  }
+  
+  .app-title {
+    color: white;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  ion-spinner {
+    width: 60px;
+    height: 60px;
+    color: white;
+  } 

@@ -1,145 +1,175 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonInput, IonButton, IonList, IonItem, 
-  LoadingController, ToastController, IonIcon, IonButtons, IonLabel, IonBadge, IonChip, IonPopover, IonAvatar } from '@ionic/angular/standalone';
+import { 
+  IonContent, IonHeader, IonTitle, IonToolbar, IonInput, IonButton, IonList, IonItem, 
+ LoadingController, ToastController, IonIcon, IonButtons, IonLabel, 
+  IonChip, IonPopover, IonModal, IonAvatar
+} from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
-import { Firestore, collection, addDoc, collectionData, deleteDoc, doc, updateDoc } from '@angular/fire/firestore';
-import { query, where } from 'firebase/firestore';
-import { Auth } from '@angular/fire/auth';
+import { Firestore, collection, addDoc, collectionData, doc } from '@angular/fire/firestore';
 import { AuthService } from '../../../core/services/auth.service';
+import { PhoneService } from '../../../core/services/phone.service';
+import { StorageService } from '../../../core/services/storage.service';
 import { addIcons } from 'ionicons';
 import { 
-  callOutline, searchOutline, addOutline, logOutOutline, trashOutline, 
-  thumbsUpOutline, thumbsDownOutline, thumbsUp, thumbsDown, call, personOutline, settingsOutline, 
-  logInOutline, search, closeCircleOutline } from 'ionicons/icons';
-import { PhoneService } from 'src/app/core/services/phone.service';
+  callOutline, searchOutline, addOutline, logOutOutline, personOutline, 
+  logInOutline, search, closeCircleOutline, call
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonAvatar, IonPopover, 
-    IonLabel, IonButtons, IonIcon, IonContent, IonHeader, IonTitle, IonToolbar, 
-    IonInput, IonButton, IonList, IonItem, IonChip, CommonModule, FormsModule
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    IonAvatar, 
+    IonPopover,
+    IonModal,
+    IonLabel, 
+    IonButtons, 
+    IonIcon, 
+    IonContent, 
+    IonHeader, 
+    IonTitle, 
+    IonToolbar, 
+    IonInput, 
+    IonButton, 
+    IonList, 
+    IonItem, 
+    IonChip,
+    
   ]
 })
 export class HomePage implements OnInit {
-  phoneNumbers: any[] = [];  
-  searchQuery: string = '';     
-  newPhoneNumber: string = '';  
-  isLogin = false;
-  private firestore: Firestore = inject(Firestore);
-  private auth: Auth = inject(Auth);
+  // Properties
+  phoneNumbers: any[] = [];
+  filteredNumbers: any[] = [];
+  searchQuery: string = '';
+  showSearchPrompt: boolean = true;
   isAuthenticated: boolean = false;
-  
+
   // Properties for the evaluation dialog
   showEvaluation: boolean = false;
   comment: string = '';
   phoneToEvaluate: string = '';
+
+  private firestore: Firestore = inject(Firestore);
   
   constructor(
     private router: Router,
     private authService: AuthService,
-    private phoneRatingService: PhoneService,
+    private phoneService: PhoneService,
+    private storageService: StorageService,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController
   ) {
     // Add Ionic icons
     addIcons({
-      personOutline, settingsOutline, logOutOutline, searchOutline, callOutline, call, 
-      trashOutline, addOutline, thumbsUpOutline, thumbsDownOutline, thumbsUp, thumbsDown, 
-      logInOutline, search, closeCircleOutline
+      personOutline, logOutOutline, searchOutline, callOutline, call, 
+      addOutline, logInOutline, search, closeCircleOutline
     });
   }
 
   ngOnInit() {
-    this.checkLoginStatus();
-    this.isAuthenticated = this.authService.isAuthenticated();
-  
-    this.authService.authState.subscribe(state => {
-      this.isAuthenticated = state;
+    // Check authentication state
+    this.authService.authState.subscribe(isAuthenticated => {
+      this.isAuthenticated = isAuthenticated;
     });
     
-    // Reset search query
-    this.searchQuery = '';
-    
-    // Load phone numbers regardless of login state
+    // Load all phone numbers
     this.loadPhoneNumbers();
   }
-  
-  checkLoginStatus() {
-    this.auth.onAuthStateChanged(user => {
-      this.isLogin = !!user;
-    });
+
+  // Load phone numbers from Firestore
+  async loadPhoneNumbers() {
+    try {
+      const phoneCollectionRef = collection(this.firestore, 'phoneNumbers');
+      collectionData(phoneCollectionRef, { idField: 'id' }).subscribe(
+        (data: any[]) => {
+          this.phoneNumbers = data;
+          this.searchPhoneNumber(); // Update filtered numbers if search query exists
+        }
+      );
+    } catch (error: any) {
+      console.error('Error loading phone numbers:', error);
+      this.presentToast('Erreur lors du chargement des numéros');
+    }
   }
 
-  clearSearch() {
-    this.searchQuery = '';
+  // Search for phone numbers
+  async searchPhoneNumber() {
+    if (this.searchQuery && this.searchQuery.trim() !== '') {
+      this.showSearchPrompt = false;
+      try {
+        this.filteredNumbers = await this.phoneService.searchPhoneNumber(this.searchQuery);
+      } catch (error: any) {
+        console.error('Error searching phone numbers:', error);
+        this.presentToast('Erreur lors de la recherche');
+      }
+    } else {
+      this.filteredNumbers = [];
+      this.showSearchPrompt = true;
+    }
   }
-  
-  async addPhoneNumber() {
-    if (!this.isLogin) {
+
+  // Open evaluation dialog
+  openEvaluationDialog() {
+    if (!this.isAuthenticated) {
       this.router.navigate(['/login']);
       return;
     }
+    this.showEvaluation = true;
+  }
 
-    if (!this.newPhoneNumber.trim()) {
+  // Submit evaluation for a phone number
+  async submitEvaluation(isValid: boolean) {
+    if (!this.phoneToEvaluate || this.phoneToEvaluate.trim() === '') {
       this.presentToast('Veuillez entrer un numéro de téléphone');
       return;
     }
 
-    // Check if phone number already exists
-    try {
-      const isUnique = await this.authService.isPhoneNumberUnique(this.newPhoneNumber);
-      if (!isUnique) {
-        this.presentToast('Ce numéro de téléphone existe déjà');
-        return;
-      }
-      
-      // Show evaluation dialog instead of immediately adding the number
-      this.phoneToEvaluate = this.newPhoneNumber;
-      this.showEvaluation = true;
-      
-    } catch (error: any) {
-      console.error('Error checking phone number:', error);
-      this.presentToast(error.message || 'Erreur lors de la vérification du numéro');
-    }
-  }
-
-  // Handle evaluation submission
-  async submitEvaluation(isValid: boolean) {
     const loading = await this.loadingCtrl.create({
       message: 'Ajout du numéro en cours...',
     });
     await loading.present();
 
     try {
-      // First add the phone number
-      const result = await this.authService.addPhoneNumber(this.phoneToEvaluate);
+      // Check if phone number is unique first
+      const isUnique = await this.authService.isPhoneNumberUnique(this.phoneToEvaluate);
       
-      // Wait for the phone number to be loaded again to get its ID
-      await this.loadPhoneNumbers();
-      
-      // Find the newly added phone in the loaded phones
-      const addedPhone = this.phoneNumbers.find(p => p.number === this.phoneToEvaluate);
-      
-      if (addedPhone && addedPhone.id) {
-        // Rate the phone number
-        await this.phoneRatingService.ratePhoneNumber(addedPhone.id, isValid);
+      if (!isUnique) {
+        // If phone exists, find it and rate it
+        const existingPhones = await this.phoneService.searchPhoneNumber(this.phoneToEvaluate);
+        if (existingPhones.length > 0) {
+          const phoneId = existingPhones[0].id;
+          await this.phoneService.ratePhoneNumber(phoneId, isValid, this.comment);
+          this.presentToast('Numéro évalué avec succès');
+        } else {
+          this.presentToast('Numéro existant mais introuvable');
+        }
+      } else {
+        // If phone doesn't exist, add it first then rate it
+        await this.phoneService.addPhoneNumber(this.phoneToEvaluate);
+        // Refresh phone list
+        const phones = await this.phoneService.searchPhoneNumber(this.phoneToEvaluate);
+        if (phones.length > 0) {
+          const newPhoneId = phones[0].id;
+          await this.phoneService.ratePhoneNumber(newPhoneId, isValid, this.comment);
+          this.presentToast('Numéro ajouté et évalué avec succès');
+        }
       }
       
-      // Reset form and hide dialog
-      this.newPhoneNumber = '';
-      this.phoneToEvaluate = '';
-      this.comment = '';
-      this.showEvaluation = false;
+      // Reset and close dialog
+      this.cancelEvaluation();
+      // Refresh phone list
+      this.loadPhoneNumbers();
       
-      this.presentToast('Numéro de téléphone ajouté et évalué avec succès');
     } catch (error: any) {
-      console.error('Error adding and evaluating phone number:', error);
-      this.presentToast(error.message || 'Échec de l\'ajout du numéro de téléphone');
+      console.error('Error evaluating phone number:', error);
+      this.presentToast(error.message || 'Erreur lors de l\'évaluation');
     } finally {
       loading.dismiss();
     }
@@ -152,116 +182,29 @@ export class HomePage implements OnInit {
     this.comment = '';
   }
 
-  async loadPhoneNumbers() {
-    console.log('Loading phone numbers...');
-    const phonesRef = collection(this.firestore, 'phoneNumbers');
-    // Remove the filter to get all phone numbers instead of just the current user's
-    collectionData(phonesRef, { idField: 'id' }).subscribe(async (data: any) => {
-      console.log('Data received:', data);
-      // Get ratings for each phone number
-      const phonesWithRatings = await Promise.all(data.map(async (phone: any) => {
-        // Initialize ratings if not present
-        if (!phone.validRatings) {
-          phone.validRatings = 0;
-        }
-        if (!phone.invalidRatings) {
-          phone.invalidRatings = 0;
-        }
-        if (!phone.totalRatings) {
-          phone.totalRatings = 0;
-        }
-        
-        // Get current user's rating
-        const userRating = await this.phoneRatingService.getUserRating(phone.id);
-        phone.userRating = userRating;
-        
-        return phone;
-      }));
-      
-      this.phoneNumbers = phonesWithRatings;
-      console.log('Phone numbers loaded:', this.phoneNumbers);
-    });
-  }
-
-  async deletePhoneNumber(item: any) {
-    const loading = await this.loadingCtrl.create({
-      message: 'Suppression en cours...',
-    });
-    await loading.present();
-
-    try {
-      const phoneDocRef = doc(this.firestore, 'phoneNumbers', item.id);
-      await deleteDoc(phoneDocRef);
-      this.presentToast('Numéro de téléphone supprimé');
-    } catch (error: any) {
-      console.error('Error deleting phone number:', error);
-      this.presentToast(error.message || 'Échec de la suppression du numéro de téléphone');
-    } finally {
-      loading.dismiss();
-    }
-  }
-
-  async ratePhone(phone: any, isValid: boolean) {
-    if (!this.isLogin) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
-    const loading = await this.loadingCtrl.create({
-      message: 'Évaluation en cours...',
-    });
-    await loading.present();
-
-    try {
-      await this.phoneRatingService.ratePhoneNumber(phone.id, isValid);
-      this.presentToast('Numéro évalué avec succès');
-      // Update in local array to refresh UI
-      this.loadPhoneNumbers();
-    } catch (error: any) {
-      console.error('Error rating phone:', error);
-      this.presentToast(error.message || 'Échec de l\'évaluation du numéro');
-    } finally {
-      loading.dismiss();
-    }
-  }
-
-  get filteredNumbers() {
-    if (!this.searchQuery || this.searchQuery.trim() === '') {
-      return []; // Return empty array when search is empty
-    }
-    
-    const query = this.searchQuery.toLowerCase().trim();
-    return this.phoneNumbers.filter(item => 
-      item.number && item.number.toString().toLowerCase().includes(query)
-    );
-  }
-
+  // Show toast message
   async presentToast(message: string) {
     const toast = await this.toastCtrl.create({
-      message,
+      message: message,
       duration: 2000,
       position: 'bottom'
     });
     await toast.present();
   }
 
+  // Logout
   logout() {
-    this.authService.logout();
+    this.authService.logout().then(() => {
+      this.router.navigate(['/login']);
+    }).catch((error) => {
+      console.error('Error logging out:', error);
+      this.presentToast('Erreur lors de la déconnexion');
+    });
   }
-
-  hasValidRating(phone: any): boolean {
-    return phone.userRating && phone.userRating.isValid === true;
+  goProfile(){
+    this.router.navigate(['/profile'])
   }
-
-  hasInvalidRating(phone: any): boolean {
-    return phone.userRating && phone.userRating.isValid === false;
-  }
-
-  goToLogin(){
-    this.router.navigate(['/login']);
-  }
-
-  goProfil(){
-    this.router.navigate(['/profile']);
+  goLogin(){
+    this.router.navigate(['/login'])
   }
 }

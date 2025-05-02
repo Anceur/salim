@@ -19,6 +19,13 @@
   --cosmic-gradient-dark: linear-gradient(135deg, #2A2D3E, #1A1C2A);
 }
 
+
+* {
+  font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+  box-sizing: border-box;
+}
+
+
 // Custom Animations
 @keyframes cosmicFloat {
   0% { transform: translateY(0) rotate(0deg); }

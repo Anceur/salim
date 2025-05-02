@@ -1,16 +1,17 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/login"></ion-back-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding">
+
+<ion-content [fullscreen]="true" class="ion-padding" scrollY="true">
+
+
   <div class="register-container">
+
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login" text=""></ion-back-button>
+    </ion-buttons>
+
     <div class="form-header">
-      <h2 class="form-title">Create Business Account</h2>
-      <p class="form-subtitle">Step {{currentStep}}: {{getStepTitle()}}</p>
+      <h2 class="form-title">Créer un Compte Professionnel</h2>
+      <p class="form-subtitle">Étape {{currentStep}}: {{getStepTitle()}}</p>
     </div>
 
     <form (ngSubmit)="onRegister()">
@@ -30,23 +31,28 @@
         <!-- Personal Information Section -->
         <div class="form-section">
           <div class="form-row">
+                        
             <ion-item>
-              <ion-input [(ngModel)]="firstName" name="firstName" placeholder="First Name" type="text" required></ion-input>
+              <ion-input [(ngModel)]="lastName" name="lastName" placeholder="Nom" type="text" required></ion-input>
             </ion-item>
-            
             <ion-item>
-              <ion-input [(ngModel)]="lastName" name="lastName" placeholder="Last Name" type="text" required></ion-input>
+              <ion-input [(ngModel)]="firstName" name="firstName" placeholder="Prénom" type="text" required></ion-input>
             </ion-item>
+
           </div>
           
-          <ion-item>
+          <ion-item [class.ion-invalid]="!isEmailValid">
             <ion-icon name="mail-outline" slot="start"></ion-icon>
-            <ion-input [(ngModel)]="email" name="email" placeholder="Email" type="email" required></ion-input>
+            <ion-input [(ngModel)]="email" name="email" placeholder="Email" type="email" required
+                      (ionBlur)="validateEmail()"></ion-input>
           </ion-item>
+          <div *ngIf="!isEmailValid" class="error-message">
+            {{ emailError }}
+          </div>
           
           <ion-item [class.ion-invalid]="!isPhoneNumberValid">
             <ion-icon name="call-outline" slot="start"></ion-icon>
-            <ion-input [(ngModel)]="phoneNumber" name="phoneNumber" placeholder="Phone Number" type="tel" required 
+            <ion-input [(ngModel)]="phoneNumber" name="phoneNumber" placeholder="Numéro de téléphone" type="tel" required 
                       (ionBlur)="validatePhoneNumber()"></ion-input>
           </ion-item>
           <div *ngIf="!isPhoneNumberValid" class="error-message">
@@ -55,72 +61,73 @@
           
           <ion-item>
             <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
-            <ion-input [(ngModel)]="password" name="password" placeholder="Password" type="password" required></ion-input>
+            <ion-input [(ngModel)]="password" name="password" placeholder="Mot de passe" type="password" required></ion-input>
             <ion-icon name="eye-outline" slot="end" class="password-toggle"></ion-icon>
           </ion-item>
+          <div class="select-container">
+            <ion-icon name="home-outline" class="select-icon"></ion-icon>
+            <select [(ngModel)]="wilaya" name="wilaya" class="native-phone-style">
+              <option value="" disabled selected hidden>Wilaya</option> 
+              <option *ngFor="let w of wilayas" [value]="w">{{ w }}</option>
+            </select>
+          </div>
           
-          <!-- Location Information Section -->
-          <ion-item>
-            <ion-icon name="map-outline" slot="start"></ion-icon>
-            <ion-input [(ngModel)]="wilaya" name="wilaya" placeholder="Wilaya" type="text" required></ion-input>
-          </ion-item>
+       
+          
         </div>
 
         <div class="terms-container">
           <ion-checkbox [(ngModel)]="agreeTerms" name="agreeTerms"></ion-checkbox>
-          <span class="terms-text">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+          <span class="terms-text">J'accepte les <a href="#">Conditions d'Utilisation</a> et la <a href="#">Politique de Confidentialité</a></span>
         </div>
       </div>
 
-      <!-- Step 2: Business Information -->
       <div *ngIf="currentStep === 2" class="form-section">
-        <!-- Business Information Section -->
         <ion-item>
           <ion-icon name="briefcase-outline" slot="start"></ion-icon>
-          <ion-input [(ngModel)]="businessName" name="businessName" placeholder="Business Name" type="text" required></ion-input>
+          <ion-input [(ngModel)]="businessName" name="businessName" placeholder="Nom de l'entreprise" type="text" required></ion-input>
         </ion-item>
         <ion-item>
           <ion-icon name="build-outline" slot="start"></ion-icon>
-          <ion-input [(ngModel)]="businessField" name="businessField" placeholder="Business Field" type="text" required></ion-input>
+          <ion-input [(ngModel)]="businessField" name="businessField" placeholder="Secteur d'activité" type="text" required></ion-input>
         </ion-item>
       </div>
 
-      <!-- Step 3: Proof of Business -->
       <div *ngIf="currentStep === 3" class="form-section">
         <ion-item class="file-upload-item">
           <div class="custom-file-upload">
-            <img src="../../../../assets/images/upload.png" alt="Upload Icon" class="upload-image" />
+            <img src="../../../../assets/images/upload.png" alt="Icône de téléchargement" class="upload-image" />
             <input type="file" (change)="onFileSelected($event)" accept="image/*" class="file-input" />
           </div>
-          <ion-label>Upload Proof of Business</ion-label>
+          <ion-label>Télécharger une preuve d'entreprise</ion-label>
         </ion-item>
       
         <div *ngIf="selectedFile" class="file-preview">
           <div class="file-info">
             <ion-icon name="document-text-outline"></ion-icon>
             <span class="file-name">{{ selectedFile.name }}</span>
-            <span class="file-size">({{ selectedFile.size | number }} bytes)</span>
+            <span class="file-size">({{ selectedFile.size | number }} octets)</span>
           </div>
         </div>
       </div>   
     
       <div class="navigation-buttons">
         <ion-button fill="outline" class="back-button" (click)="goToPreviousStep()" *ngIf="currentStep > 1">
-          Back
+          Retour
         </ion-button>
         
         <ion-button class="next-button" (click)="goToNextStep()" *ngIf="currentStep < 3">
-          Next
+          Suivant
         </ion-button>
 
         <ion-button type="submit" *ngIf="currentStep === 3">
-          Submit
+          Soumettre
         </ion-button>
       </div>
     </form>
 
     <div class="login-link">
-      Already have an account? <a routerLink="/login">Log In</a>
+      copyright © all rights reserved
     </div>
   </div>
 </ion-content>

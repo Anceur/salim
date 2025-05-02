@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, doc, setDoc, collection, collectionData, query, where, getDocs, updateDoc } from '@angular/fire/firestore';
+import { Firestore, doc, setDoc, collection, collectionData, query, where, getDocs, updateDoc, addDoc, increment, getDoc } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
 
 @Injectable({
@@ -12,211 +12,229 @@ export class PhoneService {
     private auth: Auth
   ) {}
 
-  async ratePhoneNumber(phoneId: string, isValid: boolean) {
+  // Add a new phone number to the database
+  async addPhoneNumber(phoneNumber: string) {
     try {
-      const currentUserId = this.auth.currentUser?.uid;
-      
-      if (!currentUserId) {
-        throw new Error('User not authenticated');
-      }
+      const user = this.auth.currentUser;
+      if (!user) throw new Error('Utilisateur non connecté');
 
-      // Get reference to the ratings collection
-      const ratingsRef = collection(this.firestore, 'phoneRatings');
+      const phoneCollectionRef = collection(this.firestore, 'phoneNumbers');
+      await addDoc(phoneCollectionRef, {
+        number: phoneNumber,
+        userId: user.uid,
+        createdAt: new Date(),
+        validRatings: 0,
+        invalidRatings: 0,
+        totalRatings: 0
+      });
+      
+      return true;
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout du numéro:', error);
+      throw error;
+    }
+  }
+
+  // Rate a phone number (valid or invalid)
+  async ratePhoneNumber(phoneId: string, isValid: boolean, comment?: string) {
+    try {
+      const user = this.auth.currentUser;
+      if (!user) throw new Error('Utilisateur non connecté');
+
+      // Reference to ratings collection
+      const ratingCollectionRef = collection(this.firestore, 'phoneRating');
       
       // Check if user already rated this phone
-      const q = query(
-        ratingsRef, 
-        where('phoneId', '==', phoneId),
-        where('userId', '==', currentUserId)
+      const existingRatingQuery = query(
+        ratingCollectionRef, 
+        where('userId', '==', user.uid),
+        where('phoneId', '==', phoneId)
       );
       
-      const querySnapshot = await getDocs(q);
+      const existingRatingSnapshot = await getDocs(existingRatingQuery);
       
-      if (!querySnapshot.empty) {
-        // Update existing rating
-        const ratingId = querySnapshot.docs[0].id;
-        const ratingRef = doc(this.firestore, 'phoneRatings', ratingId);
+      // If rating exists - update it
+      if (!existingRatingSnapshot.empty) {
+        const existingRatingDoc = existingRatingSnapshot.docs[0];
+        const oldRating = existingRatingSnapshot.docs[0].data() as any;
         
-        await updateDoc(ratingRef, {
+        // Update the rating
+        await updateDoc(doc(this.firestore, 'phoneRating', existingRatingDoc.id), {
           isValid: isValid,
+          comment: comment || '',
           updatedAt: new Date()
         });
-      } else {
-        // Create new rating
-        await setDoc(doc(ratingsRef), {
-          phoneId: phoneId,
-          userId: currentUserId,
-          isValid: isValid,
-          createdAt: new Date()
-        });
-      }
-
-      // Update the phone stats
-      await this.updatePhoneRatingStats(phoneId);
-      
-      return { success: true };
-    } catch (error) {
-      console.error('Error rating phone number:', error);
-      throw error;
-    }
-  }
-
-  // Add method to handle phone comments
-  async addPhoneComment(phoneId: string, comment: string) {
-    try {
-      const currentUserId = this.auth.currentUser?.uid;
-      
-      if (!currentUserId) {
-        throw new Error('User not authenticated');
-      }
-
-      // Add comment to a comments collection
-      const commentsRef = collection(this.firestore, 'phoneComments');
-      
-      await setDoc(doc(commentsRef), {
-        phoneId: phoneId,
-        userId: currentUserId,
-        comment: comment,
-        createdAt: new Date()
-      });
-      
-      return { success: true };
-    } catch (error) {
-      console.error('Error adding phone comment:', error);
-      throw error;
-    }
-  }
-
-  async updatePhoneRatingStats(phoneId: string) {
-    try {
-      // Get all ratings for this phone
-      const ratingsRef = collection(this.firestore, 'phoneRatings');
-      const q = query(ratingsRef, where('phoneId', '==', phoneId));
-      const querySnapshot = await getDocs(q);
-      
-      let validCount = 0;
-      let invalidCount = 0;
-      
-      querySnapshot.forEach(doc => {
-        const rating = doc.data();
-        if (rating['isValid']) {
-          validCount++;
-        } else {
-          invalidCount++;
-        }
-      });
-      
-      // Update phone document with stats
-      const phoneRef = doc(this.firestore, 'phoneNumbers', phoneId);
-      await updateDoc(phoneRef, {
-        validRatings: validCount,
-        invalidRatings: invalidCount,
-        totalRatings: validCount + invalidCount,
-        lastUpdated: new Date()
-      });
-      
-      return { success: true };
-    } catch (error) {
-      console.error('Error updating phone stats:', error);
-      throw error;
-    }
-  }
-
-  async getPhoneRatings(phoneId: string) {
-    try {
-      const ratingsRef = collection(this.firestore, 'phoneRatings');
-      const q = query(ratingsRef, where('phoneId', '==', phoneId));
-      
-      const querySnapshot = await getDocs(q);
-      
-      let validCount = 0;
-      let invalidCount = 0;
-      let userRating = null;
-      
-      const currentUserId = this.auth.currentUser?.uid;
-      
-      querySnapshot.forEach(doc => {
-        const rating = doc.data();
-        if (rating['isValid']) {
-          validCount++;
-        } else {
-          invalidCount++;
+        
+        // Update phone rating counts if the rating changed
+        const phoneRef = doc(this.firestore, 'phoneNumbers', phoneId);
+        
+        if (oldRating.isValid !== isValid) {
+          if (isValid) {
+            // Changed from invalid to valid
+            await updateDoc(phoneRef, {
+              validRatings: increment(1),
+              invalidRatings: increment(-1)
+            });
+          } else {
+            // Changed from valid to invalid
+            await updateDoc(phoneRef, {
+              validRatings: increment(-1),
+              invalidRatings: increment(1)
+            });
+          }
         }
         
-        // Check if this is the current user's rating
-        if (rating['userId'] === currentUserId) {
-          userRating = {
+      } else {
+        // If no existing rating - create a new one
+        await addDoc(ratingCollectionRef, {
+          phoneId: phoneId,
+          userId: user.uid,
+          isValid: isValid,
+          comment: comment || '',
+          createdAt: new Date()
+        });
+        
+        // Update phone rating counts
+        const phoneRef = doc(this.firestore, 'phoneNumbers', phoneId);
+        await updateDoc(phoneRef, {
+          validRatings: increment(isValid ? 1 : 0),
+          invalidRatings: increment(isValid ? 0 : 1),
+          totalRatings: increment(1)
+        });
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Erreur lors de l\'évaluation du numéro:', error);
+      throw error;
+    }
+  }
+
+  // Get user's rating for a specific phone number
+  async getUserRating(phoneId: string) {
+    try {
+      const user = this.auth.currentUser;
+      if (!user) return null;
+
+      const ratingCollectionRef = collection(this.firestore, 'phoneRating');
+      const userRatingQuery = query(
+        ratingCollectionRef,
+        where('userId', '==', user.uid),
+        where('phoneId', '==', phoneId)
+      );
+      
+      const userRatingSnapshot = await getDocs(userRatingQuery);
+      
+      if (!userRatingSnapshot.empty) {
+        const userRatingData = userRatingSnapshot.docs[0].data() as any;
+        return userRatingData;
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Erreur lors de la récupération de l\'évaluation:', error);
+      return null;
+    }
+  }
+
+
+
+  async getUserRatedPhones() {
+      try {
+        const user = this.auth.currentUser;
+        if (!user) return [];
+  
+        // Get all ratings by this user
+        const ratingCollectionRef = collection(this.firestore, 'phoneRating');
+        const userRatingsQuery = query(
+          ratingCollectionRef,
+          where('userId', '==', user.uid)
+        );
+  
+        const userRatingsSnapshot = await getDocs(userRatingsQuery);
+  
+        if (userRatingsSnapshot.empty) {
+          return [];
+        }
+  
+        // Get all the phone records for these ratings
+        const phoneRatings = userRatingsSnapshot.docs.map(doc => {
+          return {
             id: doc.id,
-            isValid: rating['isValid']
+            ...doc.data()
           };
+        });
+  
+        // Get the actual phone number details
+        const phoneDetails = await Promise.all(
+          phoneRatings.map(async (rating: any) => {
+            // Get the phone document
+            const phoneDoc = await getDocs(
+              query(
+                collection(this.firestore, 'phoneNumbers'),
+                where('name', '==', rating.phoneId)
+              )
+            );
+  
+            if (!phoneDoc.empty) {
+              const phoneData = phoneDoc.docs[0].data();
+              return {
+                ratingId: rating.id,
+                phoneId: rating.phoneId,
+                number: phoneData['number'],
+                isValid: rating.isValid,
+                comment: rating.comment,
+                ratedAt: rating.createdAt,
+                validRatings: phoneData['validRatings'] || 0,
+                invalidRatings: phoneData['invalidRatings'] || 0,
+                totalRatings: phoneData['totalRatings'] || 0
+              };
+            }
+            return null;
+          })
+        );
+  
+        // Filter out any null entries (phones that might have been deleted)
+        return phoneDetails.filter(phone => phone !== null);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des numéros évalués:', error);
+        return [];
+      }
+    }
+
+
+
+  
+
+  // Search for phone numbers that match a query
+  async searchPhoneNumber(query: string) {
+    try {
+      if (!query || query.trim() === '') {
+        return [];
+      }
+
+      const phoneCollectionRef = collection(this.firestore, 'phoneNumbers');
+      const phonesSnapshot = await getDocs(phoneCollectionRef);
+      
+      const results: any[] = [];
+      
+      phonesSnapshot.forEach(doc => {
+        const phoneData = doc.data() as any;
+        if (phoneData.number && phoneData.number.toString().includes(query)) {
+          results.push({
+            id: doc.id,
+            ...phoneData
+          });
         }
       });
       
-      return {
-        validCount,
-        invalidCount,
-        totalCount: validCount + invalidCount,
-        userRating
-      };
+      return results;
     } catch (error) {
-      console.error('Error getting phone ratings:', error);
-      throw error;
+      console.error('Erreur lors de la recherche:', error);
+      return [];
     }
   }
 
-  async getUserRating(phoneId: string) {
-    try {
-      const currentUserId = this.auth.currentUser?.uid;
-      
-      if (!currentUserId) {
-        return null;
-      }
-      
-      const ratingsRef = collection(this.firestore, 'phoneRatings');
-      const q = query(
-        ratingsRef, 
-        where('phoneId', '==', phoneId),
-        where('userId', '==', currentUserId)
-      );
-      
-      const querySnapshot = await getDocs(q);
-      
-      if (querySnapshot.empty) {
-        return null;
-      }
-      
-      const ratingDoc = querySnapshot.docs[0];
-      return {
-        id: ratingDoc.id,
-        isValid: ratingDoc.data()['isValid']
-      };
-    } catch (error) {
-      console.error('Error getting user rating:', error);
-      throw error;
-    }
-  }
 
-  // Add method to get comments for a phone number
-  async getPhoneComments(phoneId: string) {
-    try {
-      const commentsRef = collection(this.firestore, 'phoneComments');
-      const q = query(commentsRef, where('phoneId', '==', phoneId));
-      
-      const querySnapshot = await getDocs(q);
-      
-      const comments: any[] = [];
-      
-      querySnapshot.forEach(doc => {
-        comments.push({
-          id: doc.id,
-          ...doc.data()
-        });
-      });
-      
-      return comments;
-    } catch (error) {
-      console.error('Error getting phone comments:', error);
-      throw error;
-    }
-  }
+  
 }

@@ -1,250 +1,267 @@
-// Variables
-$primary-color: var(--ion-color-primary);
-$secondary-color: var(--ion-color-secondary);
-$background-color: #f8f9fa;
-$card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-$transition-speed: 0.3s;
-
-// Main content styling
-ion-content {
-  --background: $background-color;
-  animation: fadeIn 0.8s ease-out;
+:root {
+  --ion-color-primary: #5aabfc;
+  --ion-color-primary-rgb: 78, 84, 200;
+  --ion-color-primary-contrast: #ffffff;
+  --text-color: #333;
+  --light-bg: #f7f9fc;
+  --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  --transition-speed: 0.3s;
+  --border-radius: 12px;
 }
 
-// Header styling with gradient and animation
-ion-toolbar {
-  --background: linear-gradient(135deg, $primary-color 0%, darken($primary-color, 10%) 100%);
-  --color: white;
-  position: relative;
-  overflow: hidden;
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, transparent 0%, rgba(255, 255, 255, 0.1) 100%);
-    animation: shimmer 3s infinite;
-  }
-}
-
-// Back button styling
-ion-back-button {
-  --color: white;
-  --icon-color: white;
-  --icon-font-size: 24px;
-  --icon-margin-end: 8px;
-  --icon-padding-start: 8px;
-  --icon-padding-end: 8px;
-  --min-height: 44px;
-  --min-width: 44px;
-  --padding-start: 8px;
-  --padding-end: 8px;
-  --ripple-color: rgba(255, 255, 255, 0.2);
-  position: relative;
-  overflow: hidden;
-  transition: all $transition-speed;
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    transition: transform $transition-speed;
-  }
-
-  &:active::after {
-    transform: translate(-50%, -50%) scale(1);
-  }
-
-  .button-inner {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-
-  ion-icon {
-    transition: transform $transition-speed;
-  }
-
-  &:active ion-icon {
-    transform: translateX(-4px);
-  }
-}
-
-// Profile card container
+/* Main Container */
 .profile-container {
   padding: 20px;
-  animation: slideUp 0.6s ease-out;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 
-// List styling with modern design
-ion-list {
-  background: transparent;
-  margin: 16px;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: $card-shadow;
-  transform: translateY(0);
-  transition: transform $transition-speed;
-
-  &:hover {
-    transform: translateY(-5px);
-  }
-}
-
-// Individual items with enhanced styling
-ion-item {
-  --background: #ffffff;
-  --padding-start: 20px;
-  --padding-end: 20px;
-  --inner-padding-end: 0;
-  --border-color: rgba(0, 0, 0, 0.05);
-  --min-height: 90px;
-  margin-bottom: 1px;
-  position: relative;
-  overflow: hidden;
-  transition: all $transition-speed;
-
-  &::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 4px;
-    background: $primary-color;
-    opacity: 0;
-    transition: opacity $transition-speed;
-  }
-
-  &:hover {
-    --background: #f8f9fa;
-    
-    &::before {
-      opacity: 1;
-    }
-  }
-
-  &:last-child {
-    --border-width: 0;
-  }
-
-  ion-label {
-    margin: 16px 0;
-    transition: transform $transition-speed;
-
-    h2 {
-      font-size: 13px;
-      font-weight: 600;
-      color: #666;
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      position: relative;
-      display: inline-block;
-
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: -4px;
-        left: 0;
-        width: 30px;
-        height: 2px;
-        background: $primary-color;
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform $transition-speed;
-      }
-    }
-
-    p {
-      font-size: 16px;
-      color: #333;
-      margin: 0;
-      line-height: 1.5;
-      transition: color $transition-speed;
-    }
-  }
-
-  &:hover {
-    ion-label {
-      transform: translateX(5px);
-
-      h2::after {
-        transform: scaleX(1);
-      }
-
-      p {
-        color: $primary-color;
-      }
-    }
-  }
-}
-
-// Business information special styling
-ion-item:nth-child(3) {
-  ion-label p {
-    color: $primary-color;
-    font-weight: 500;
-    position: relative;
-    padding-left: 20px;
-
-    &::before {
-      content: '🏢';
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-  }
-}
-
-// Empty state styling
-ion-text {
-  display: block;
+/* Profile Header */
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px 15px;
+  background: white;
+  border-radius: 40px;
+  box-shadow: var(--card-shadow);
+  animation: _ngcontent-ng-c142404059_fadeInDown 0.8s ease-out;
   text-align: center;
-  margin-top: 40px;
-  font-size: 16px;
+}
+
+/* Header */
+.profile-title {
+  margin-bottom: 25px;
+  padding: 0px 20px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  animation: fadeInDown 0.8s ease-out;
+  text-align: center;
+}
+
+.profile-title h1 {
+  font-family: "Anton", sans-serif;;
+  font-weight: 700;
+  text-align: left;
+  font-size: 3.5rem;
+  color: #5aabfc;
+}
+
+.profile-title p {
   color: #666;
-  animation: fadeIn 1s ease-out;
+  margin: 0;
+  text-align: left;
+  font-size: 16px;
 }
 
-// Responsive design
-@media (min-width: 768px) {
-  .profile-container {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 30px;
-  }
-
-  ion-list {
-    margin: 24px;
-  }
+.profile-avatar {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 15px;
+  background-color: #e0e0e0;
+  border: 3px solid #5aabfc;
+  box-shadow: 0 4px 10px rgba(78, 84, 200, 0.3);
 }
 
-// Animations
-@keyframes fadeIn {
+.profile-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 15px rgba(78, 84, 200, 0.4);
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-avatar ion-icon {
+  font-size: 60px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+}
+
+.edit-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition-speed);
+}
+
+.profile-avatar:hover .edit-overlay {
+  opacity: 1;
+}
+
+.edit-overlay ion-icon {
+  color: white;
+  font-size: 18px;
+}
+
+.profile-header h1 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 10px 0 5px;
+  color: var(--text-color);
+}
+
+.profile-header p {
+  color: #5aabfc;
+  font-size: 16px;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Profile Info Cards */
+.profile-info {
+  background: transparent;
+  padding: 0;
+}
+
+.info-card {
+  margin-bottom: 16px;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  background: white;
+  box-shadow: var(--card-shadow);
+  animation: fadeInUp 0.5s ease-out;
+  animation-fill-mode: both;
+}
+
+.info-card:nth-child(1) { animation-delay: 0.1s; }
+.info-card:nth-child(2) { animation-delay: 0.2s; }
+.info-card:nth-child(3) { animation-delay: 0.3s; }
+.info-card:nth-child(4) { animation-delay: 0.4s; }
+.info-card:nth-child(5) { animation-delay: 0.5s; }
+
+.info-card ion-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --background: transparent;
+}
+
+.item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  margin: 10px;
+  background: rgba(78, 84, 200, 0.1);
+  border-radius: 12px;
+  transition: background-color var(--transition-speed);
+}
+
+.info-card:hover .item-icon {
+  background: rgba(78, 84, 200, 0.2);
+}
+
+.item-icon ion-icon {
+  font-size: 24px;
+  color: var(--ion-color-primary);
+}
+
+ion-label h2 {
+  font-size: 14px;
+  font-weight: 500;
+  color: #888;
+  margin-bottom: 5px;
+}
+
+ion-label p {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-color);
+  margin: 0;
+}
+
+/* Edit Mode Styling */
+.edit-inputs {
+  flex: 1;
+  padding: 10px 0;
+}
+
+.edit-inputs ion-input {
+  --padding-start: 12px;
+  --background: #f5f7fa;
+  --border-radius: 8px;
+  margin-bottom: 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.edit-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.edit-buttons ion-button {
+  --padding-start: 8px;
+  --padding-end: 8px;
+}
+
+/* Password Change Modal */
+ion-modal ion-toolbar {
+  --background: var(--ion-color-primary);
+  --color: white;
+}
+
+ion-modal ion-content {
+  --background: var(--light-bg);
+}
+
+ion-modal ion-item {
+  --border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.empty-state ion-icon {
+  font-size: 80px;
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+.empty-state h3 {
+  font-size: 22px;
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.empty-state p {
+  color: #888;
+  font-size: 16px;
+}
+
+/* Animations */
+@keyframes fadeInDown {
   from {
     opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(-20px);
   }
   to {
     opacity: 1;
@@ -252,37 +269,126 @@ ion-text {
   }
 }
 
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  100% {
-    transform: translateX(100%);
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-// Add ripple effect
-ion-item {
-  position: relative;
-  overflow: hidden;
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 
-  &::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 5px;
-    height: 5px;
-    background: rgba(255, 255, 255, 0.5);
+/* Add hover effects for cards */
+.info-card {
+  transition: transform var(--transition-speed);
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
+}
+
+
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(20, 20);
     opacity: 0;
-    border-radius: 100%;
-    transform: scale(1, 1) translate(-50%);
-    transform-origin: 50% 50%;
   }
+}
 
-  &:active::after {
-    animation: ripple 1s ease-out;
+/* Media Queries for Responsive Design */
+@media (min-width: 768px) {
+  .profile-container {
+    margin: 0 auto;
+    padding: 30px;
   }
+  
+  .profile-header {
+    padding: 35px 20px;
+  }
+  
+  .profile-avatar {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+/* Styling for action buttons container */
+.action-buttons {
+  margin-top: 25%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Change Password Button */
+.change-password-button {
+  --background: var(--ion-color-primary);
+  --color: white;
+  --border-radius: 30px;
+  font-size: 16px;
+  border-radius: 30px;
+  font-weight: 500;
+  box-shadow: 0 4px 10px rgba(78, 84, 200, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.change-password-button:hover {
+  --background-color: #5aabfc;
+  transform: scale(1.02);
+  box-shadow: 0 6px 15px rgba(78, 84, 200, 0.4);
+}
+
+/* Logout Button */
+.logout-button {
+  --background: #ff4961;
+  --color: white;
+  --border-radius: 30px;
+  font-size: 16px;
+  border-radius: 30px;
+  font-weight: 500;
+  box-shadow: 0 4px 10px rgba(255, 73, 97, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.logout-button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 15px rgba(255, 73, 97, 0.4);
+}
+
+/* Add ripple effect for buttons */
+ion-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%);
+  transform-origin: 50% 50%;
+}
+
+ion-button:active::after {
+  animation: ripple 0.6s ease-out;
 }
 
 @keyframes ripple {
@@ -291,23 +397,27 @@ ion-item {
     opacity: 0.5;
   }
   100% {
-    transform: scale(100, 100);
+    transform: scale(20, 20);
     opacity: 0;
   }
 }
 
-// Add loading skeleton animation
-.skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
+/* Navigation Buttons Styling */
+.nav-buttons {
+  display: flex;
+  flex-direction: column; /* Arrange buttons in a column */
+  margin-top: 20px;
 }
 
-@keyframes loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+.nav-button {
+  --color: var(--ion-color-primary);
+  --justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  width: 300px;
+  font-size: 16px;
+  font-weight: 500;
+  border: 1px solid var(--ion-color-primary);
+  border-radius: 80px;
+  // transition: background-color 0.3s ease, color 0.3s ease;
 }

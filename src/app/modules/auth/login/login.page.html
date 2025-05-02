@@ -1,17 +1,16 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home"></ion-back-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+
 
 <ion-content [fullscreen]="true" class="ion-padding">
+
   <div class="login-container">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" text=""></ion-back-button>
+    </ion-buttons>
+    
     <div class="logo-container">
-      <img src="../../../../assets/images/logo.png" alt="App Logo" class="app-logo">
-      <h2 class="welcome-text">Welcome Back</h2>
-      <p class="subtitle">Sign in to continue your journey</p>
+      <img src="../../../../assets/images/logo.png" alt="Logo de l'Application" class="app-logo">
+      <h2 class="welcome-text">Bienvenue</h2>
+      <p class="subtitle">Connectez-vous pour continuer votre voyage</p>
     </div>
     
     <form (ngSubmit)="onLogin()">
@@ -21,23 +20,18 @@
       </ion-item>
       <ion-item>
         <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
-        <ion-input [(ngModel)]="password" name="password" placeholder="Password" type="password" required></ion-input>
+        <ion-input [(ngModel)]="password" name="password" placeholder="Mot de passe" type="password" required></ion-input>
         <ion-icon name="eye-outline" slot="end" class="password-toggle"></ion-icon>
       </ion-item>
       
-      <div class="forgot-password-container">
-        <a routerLink="/forgot-password" class="forgot-password">Forgot Password?</a>
-      </div>
-      
       <ion-button expand="block" type="submit" class="login-button">
         <ion-icon name="log-in-outline" slot="start"></ion-icon>
-        Login
+        Connexion
       </ion-button>
     </form>
     
-    
     <div class="signup-link">
-      Don't have an account? <a routerLink="/register">Sign Up</a>
+      Vous n'avez pas de compte? <a routerLink="/register">S'inscrire</a>
     </div>
   </div>
 </ion-content>
