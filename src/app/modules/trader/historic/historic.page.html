@@ -1,20 +1,9 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Historique des évaluations</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Historique des évaluations</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
   <div class="ion-padding">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" text=""></ion-back-button>
+    </ion-buttons>
+    <h2 class="form-title">Historique des évaluations</h2>
     <div *ngIf="isLoading" class="ion-text-center">
       <ion-spinner></ion-spinner>
       <p>Chargement des données...</p>

@@ -18,15 +18,14 @@ if(environment.production){
 }
 bootstrapApplication(AppComponent, {
   providers: [
-
-    provideRouter(routes),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideFirestore(() => getFirestore()),
+    provideFirestore(() => getFirestore()), // فقط مرة واحدة
     provideAuth(() => getAuth()),
-    provideStorage(() => getStorage()), 
-    PhoneService, 
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    provideIonicAngular(),
+    provideStorage(() => getStorage()),
     provideRouter(routes, withPreloading(PreloadAllModules)),
-  ],
+    provideIonicAngular(),
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    PhoneService
+  ]
+
 });

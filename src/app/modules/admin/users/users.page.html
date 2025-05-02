@@ -53,213 +53,67 @@
           </ion-button>
           <ion-button>
             <ion-avatar>
-              <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+              <img src="../../../../assets/images/admin.jpeg">
             </ion-avatar>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
-      <ion-toolbar class="searchbar-toolbar">
-        <ion-searchbar placeholder="Search anything..."></ion-searchbar>
-      </ion-toolbar>
+     
     </ion-header>
 
     <ion-content class="ion-padding">
       <!-- Dashboard Overview -->
-      <ion-grid>
         <ion-row>
           <ion-col size="12" size-md="6" size-lg="3">
             <ion-card class="stat-card">
               <ion-card-content>
+                <ion-badge color="success">+12%</ion-badge>
                 <div class="stat-icon bg-primary">
                   <ion-icon name="people-outline"></ion-icon>
                 </div>
                 <div class="stat-details">
-                  <h2>5</h2>
+                  <h2>{{ totalUsers$ | async }}</h2>
                   <p>Total Users</p>
-                  <ion-badge color="success">+12% <ion-icon name="arrow-up-outline"></ion-icon></ion-badge>
-                </div>
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-          <ion-col size="12" size-md="6" size-lg="3">
-            <ion-card class="stat-card">
-              <ion-card-content>
-                <div class="stat-icon bg-warning">
-                  <ion-icon name="cube-outline"></ion-icon>
-                </div>
-                <div class="stat-details">
-                  <h2>2</h2>
-                  <p>Total Products</p>
-                  <ion-badge color="warning">+3% <ion-icon name="arrow-up-outline"></ion-icon></ion-badge>
-                </div>
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-          <ion-col size="12" size-md="6" size-lg="3">
-            <ion-card class="stat-card">
-              <ion-card-content>
-                <div class="stat-icon bg-danger">
-                  <ion-icon name="return-down-back-outline"></ion-icon>
-                </div>
-                <div class="stat-details">
-                  <h2>0</h2>
-                  <p>Returns</p>
-                  <ion-badge color="danger">+15% <ion-icon name="arrow-up-outline"></ion-icon></ion-badge>
+               
                 </div>
               </ion-card-content>
             </ion-card>
           </ion-col>
         </ion-row>
-      </ion-grid>
 
       <!-- Recent Orders -->
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>Recent Orders</ion-card-title>
-          <ion-card-subtitle>Last 5 orders from customers</ion-card-subtitle>
-        </ion-card-header>
-        <ion-card-content>
-          <div class="table-responsive">
-            <table class="admin-table">
-              <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>Customer</th>
-                  <th>Date</th>
-                  <th>Amount</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>#ORD-125</td>
-                  <td>
-                    <div class="customer-info">
-                      <ion-avatar>
-                        <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
-                      </ion-avatar>
-                      <span>John Doe</span>
-                    </div>
-                  </td>
-                  <td>Apr 10, 2025</td>
-                  <td>$320.00</td>
-                  <td><ion-badge color="success">Delivered</ion-badge></td>
-                  <td>
-                    <ion-buttons>
-                      <ion-button size="small" fill="clear">
-                        <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
-                      </ion-button>
-                      <ion-button size="small" fill="clear">
-                        <ion-icon slot="icon-only" name="create-outline"></ion-icon>
-                      </ion-button>
-                    </ion-buttons>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#ORD-124</td>
-                  <td>
-                    <div class="customer-info">
-                      <ion-avatar>
-                        <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
-                      </ion-avatar>
-                      <span>Jane Smith</span>
-                    </div>
-                  </td>
-                  <td>Apr 09, 2025</td>
-                  <td>$149.99</td>
-                  <td><ion-badge color="warning">Processing</ion-badge></td>
-                  <td>
-                    <ion-buttons>
-                      <ion-button size="small" fill="clear">
-                        <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
-                      </ion-button>
-                      <ion-button size="small" fill="clear">
-                        <ion-icon slot="icon-only" name="create-outline"></ion-icon>
-                      </ion-button>
-                    </ion-buttons>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#ORD-123</td>
-                  <td>
-                    <div class="customer-info">
-                      <ion-avatar>
-                        <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
-                      </ion-avatar>
-                      <span>Mike Johnson</span>
-                    </div>
-                  </td>
-                  <td>Apr 08, 2025</td>
-                  <td>$75.50</td>
-                  <td><ion-badge color="primary">Shipped</ion-badge></td>
-                  <td>
-                    <ion-buttons>
-                      <ion-button size="small" fill="clear">
-                        <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
-                      </ion-button>
-                      <ion-button size="small" fill="clear">
-                        <ion-icon slot="icon-only" name="create-outline"></ion-icon>
-                      </ion-button>
-                    </ion-buttons>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#ORD-122</td>
-                  <td>
-                    <div class="customer-info">
-                      <ion-avatar>
-                        <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
-                      </ion-avatar>
-                      <span>Sarah Williams</span>
-                    </div>
-                  </td>
-                  <td>Apr 07, 2025</td>
-                  <td>$482.75</td>
-                  <td><ion-badge color="success">Delivered</ion-badge></td>
-                  <td>
-                    <ion-buttons>
-                      <ion-button size="small" fill="clear">
-                        <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
-                      </ion-button>
-                      <ion-button size="small" fill="clear">
-                        <ion-icon slot="icon-only" name="create-outline"></ion-icon>
-                      </ion-button>
-                    </ion-buttons>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#ORD-121</td>
-                  <td>
-                    <div class="customer-info">
-                      <ion-avatar>
-                        <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
-                      </ion-avatar>
-                      <span>Robert Brown</span>
-                    </div>
-                  </td>
-                  <td>Apr 06, 2025</td>
-                  <td>$215.25</td>
-                  <td><ion-badge color="danger">Cancelled</ion-badge></td>
-                  <td>
-                    <ion-buttons>
-                      <ion-button size="small" fill="clear">
-                        <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
-                      </ion-button>
-                      <ion-button size="small" fill="clear">
-                        <ion-icon slot="icon-only" name="create-outline"></ion-icon>
-                      </ion-button>
-                    </ion-buttons>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="ion-padding-top ion-text-center">
-            <ion-button size="small" class="view-all" fill="outline">View All Orders</ion-button>
-          </div>
-        </ion-card-content>
-      </ion-card>
+      <ion-grid>
+        <ion-row>
+        <tr *ngFor="let user of businesses">
+        
+          <td>
+            <div class="customer-info">
+              <ion-avatar>
+                <img [src]="user.profileImageUrl || 'https://gravatar.com/avatar/?d=identicon'">
+              </ion-avatar>
+              <span>{{ user.firstName }} {{ user.lastName }}</span>
+            </div>
+          </td>
+          <td>{{ user.createdAt.toDate() | date:'MMM dd, y' }}</td>
+          <td>
+            <ion-badge [color]="getStatusColor(user.status)">
+              {{ user.status | titlecase }}
+            </ion-badge>
+          </td>
+          <td>
+            <ion-buttons>
+              <ion-button class="delete" size="small" fill="clear">
+                <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
+              </ion-button>
+              <ion-button class="edit" size="small" fill="clear">
+                <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </td>
+        </tr>
+      </ion-row>
+    </ion-grid>
+      
 
       <!-- User Stats -->
       <ion-card>
@@ -272,57 +126,8 @@
         </ion-card-content>
       </ion-card>
 
-      <!-- Settings Form -->
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>System Settings</ion-card-title>
-          <ion-card-subtitle>Configure your application settings</ion-card-subtitle>
-        </ion-card-header>
-        <ion-card-content>
-          <form>
-            <ion-item>
-              <ion-label position="stacked">Company Name</ion-label>
-              <ion-input value="CoteAdmin Systems"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Administrator Email</ion-label>
-              <ion-input type="email" value="admin@coteadmin.com"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Contact Phone</ion-label>
-              <ion-input type="tel" value="+1 (555) 123-4567"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Address</ion-label>
-              <ion-textarea rows="3" value="123 Admin Street, Suite 100, City, State 12345"></ion-textarea>
-            </ion-item>
-            <ion-item>
-              <ion-label>Maintenance Mode</ion-label>
-              <ion-toggle slot="end"></ion-toggle>
-            </ion-item>
-            <ion-item>
-              <ion-label>Allow User Registration</ion-label>
-              <ion-toggle slot="end" checked></ion-toggle>
-            </ion-item>
-            <ion-item>
-              <ion-label>Email Notifications</ion-label>
-              <ion-toggle slot="end" checked></ion-toggle>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Default Language</ion-label>
-              <ion-select value="en">
-                <ion-select-option value="en">English</ion-select-option>
-                <ion-select-option value="es">Spanish</ion-select-option>
-                <ion-select-option value="fr">French</ion-select-option>
-                <ion-select-option value="de">German</ion-select-option>
-              </ion-select>
-            </ion-item>
-            <div class="ion-padding-top">
-              <ion-button expand="block">Save Settings</ion-button>
-            </div>
-          </form>
-        </ion-card-content>
-      </ion-card>
+  
+     
     </ion-content>
 
     <ion-footer>

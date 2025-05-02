@@ -63,14 +63,13 @@ ion-content {
       filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
     }
     
-    .form-title {
-      font-family: 'Poppins', sans-serif;
-      font-weight: 700;
-      font-size: 24px;
-      color: black;
-      margin-top: 50px;
-      margin-bottom: 5px;
-    }
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    text-align: center;
+    font-size: 24px;
+    color: black;
+    margin-top: 50px;
+    margin-bottom: 35px;
     
     .form-subtitle {
       font-size: 18px;

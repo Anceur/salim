@@ -49,7 +49,8 @@ export const routes: Routes = [
   {
     path: 'settings',
     loadComponent: () => import('./modules/admin/settings/settings.page').then( m => m.SettingsPage)
-  },  {
+  },
+  {
     path: 'editer',
     loadComponent: () => import('./modules/trader/editer/editer.page').then( m => m.EditerPage)
   },

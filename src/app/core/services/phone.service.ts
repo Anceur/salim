@@ -138,71 +138,63 @@ export class PhoneService {
   }
 
 
-
   async getUserRatedPhones() {
-      try {
-        const user = this.auth.currentUser;
-        if (!user) return [];
+    try {
+      const user = this.auth.currentUser;
+      if (!user) return [];
   
-        // Get all ratings by this user
-        const ratingCollectionRef = collection(this.firestore, 'phoneRating');
-        const userRatingsQuery = query(
-          ratingCollectionRef,
-          where('userId', '==', user.uid)
-        );
+      const ratingCollectionRef = collection(this.firestore, 'phoneRating');
+      const userRatingsQuery = query(
+        ratingCollectionRef,
+        where('userId', '==', user.uid)
+      );
   
-        const userRatingsSnapshot = await getDocs(userRatingsQuery);
+      const userRatingsSnapshot = await getDocs(userRatingsQuery);
   
-        if (userRatingsSnapshot.empty) {
-          return [];
-        }
-  
-        // Get all the phone records for these ratings
-        const phoneRatings = userRatingsSnapshot.docs.map(doc => {
-          return {
-            id: doc.id,
-            ...doc.data()
-          };
-        });
-  
-        // Get the actual phone number details
-        const phoneDetails = await Promise.all(
-          phoneRatings.map(async (rating: any) => {
-            // Get the phone document
-            const phoneDoc = await getDocs(
-              query(
-                collection(this.firestore, 'phoneNumbers'),
-                where('name', '==', rating.phoneId)
-              )
-            );
-  
-            if (!phoneDoc.empty) {
-              const phoneData = phoneDoc.docs[0].data();
-              return {
-                ratingId: rating.id,
-                phoneId: rating.phoneId,
-                number: phoneData['number'],
-                isValid: rating.isValid,
-                comment: rating.comment,
-                ratedAt: rating.createdAt,
-                validRatings: phoneData['validRatings'] || 0,
-                invalidRatings: phoneData['invalidRatings'] || 0,
-                totalRatings: phoneData['totalRatings'] || 0
-              };
-            }
-            return null;
-          })
-        );
-  
-        // Filter out any null entries (phones that might have been deleted)
-        return phoneDetails.filter(phone => phone !== null);
-      } catch (error) {
-        console.error('Erreur lors de la récupération des numéros évalués:', error);
+      if (userRatingsSnapshot.empty) {
         return [];
       }
+  
+      const phoneRatings = userRatingsSnapshot.docs.map(doc => {
+        return {
+          id: doc.id,
+          ...doc.data()
+        };
+      });
+  
+      // Get the actual phone number details
+      const phoneDetails = await Promise.all(
+        phoneRatings.map(async (rating: any) => {
+          // Get the phone document directly by ID
+          const phoneDocRef = doc(this.firestore, 'phoneNumbers', rating.phoneId);
+          const phoneDocSnap = await getDoc(phoneDocRef);
+  
+          if (phoneDocSnap.exists()) {
+            const phoneData = phoneDocSnap.data();
+            return {
+              ratingId: rating.id,
+              phoneId: rating.phoneId,
+              number: phoneData['number'],
+              isValid: rating.isValid,
+              comment: rating.comment,
+              createdAt: rating.createdAt,
+              updatedAt: rating.updatedAt || null,
+              validRatings: phoneData['validRatings'] || 0,
+              invalidRatings: phoneData['invalidRatings'] || 0,
+              totalRatings: phoneData['totalRatings'] || 0
+            };
+          }
+          return null;
+        })
+      );
+  
+      // Filter out any null entries (phones that might have been deleted)
+      return phoneDetails.filter(phone => phone !== null);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des numéros évalués:', error);
+      return [];
     }
-
-
+  }
 
   
 

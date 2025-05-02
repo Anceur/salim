@@ -6,6 +6,7 @@
       .title-container {
         display: flex;
         align-items: center;
+        justify-content: center;
         
         ion-icon {
           font-size: 24px;
@@ -317,4 +318,10 @@
         color: #a0aec0;
       }
     }
+  }
+
+  ion-back-button {
+    font-size: 20px;
+    padding-left: 10px;
+    --color: rgb(255, 255, 255);
   }

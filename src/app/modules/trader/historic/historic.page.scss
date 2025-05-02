@@ -1,0 +1,254 @@
+// Modern and cool styling for the history page
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:host {
+  --page-background: #f8f9fa;
+  --card-background: #ffffff;
+  --primary-color: #5768f3;
+  --secondary-color: #e8eaff;
+  --text-primary: #1a1a2e;
+  --text-secondary: #616161;
+  --success-color: #00c896;
+  --danger-color: #ff5a5f;
+  --border-radius: 16px;
+  --transition: all 0.3s ease;
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  font-family: 'Inter', sans-serif;
+}
+
+// Staggered animation
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+ion-back-button {
+    position: absolute;
+    font-size: 25px;
+    top: 0px;
+    left: -10px;
+    --color: rgb(0, 0, 0);
+  }
+
+ion-content {
+  --background: var(--page-background);
+
+  .ion-padding {
+    padding: 20px;
+    
+    .form-title {
+        font-family: "Poppins", sans-serif;
+        font-weight: 700;
+        font-size: 24px;
+        text-align: center;
+        color: black;
+        margin-top: 75px;
+        margin-bottom: 25px;
+      }
+
+    .ion-text-center {
+      margin: 3rem 0;
+      
+      ion-spinner {
+        --color: var(--primary-color);
+        width: 40px;
+        height: 40px;
+      }
+      
+      p {
+        margin-top: 1rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+      
+      ion-icon {
+        color: var(--secondary-color) !important;
+        font-size: 64px !important;
+        margin-bottom: 1rem;
+      }
+    }
+    
+    // Phone list section with staggered animation for items
+    .phone-list {
+      border-radius: 20px;
+      max-width: 100%;
+      
+      h2 {
+        text-align: center;
+        color: #1f2937;
+        font-weight: 600;
+        font-size: 18px;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px dashed rgba(90, 171, 252, 0.3);
+      }
+    }
+  }
+  
+  // Modern list styling with staggered animation
+  ion-list {
+    background: transparent;
+    padding: 0;
+    
+    ion-item {
+      --background: #ffffff;
+      --border-radius: 16px;
+      --padding-start: 16px;
+      --padding-end: 16px;
+      --inner-padding-end: 0;
+      --padding-top: 16px;
+      --padding-bottom: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.5s ease forwards;
+      
+      // Staggered animation for list items
+      @for $i from 1 through 20 {
+        &:nth-child(#{$i}) {
+          animation-delay: #{0.1 * $i}s;
+        }
+      }
+      
+      &:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      }
+      
+      ion-label {
+        h2 {
+          font-size: 18px;
+          font-weight: 600;
+          color: var(--text-primary);
+          margin-bottom: 8px;
+          display: flex;
+          align-items: center;
+          text-align: left;
+          border-bottom: none;
+          padding-bottom: 0;
+          transition: all 0.3s ease;
+          
+          &::before {
+            content: '';
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            background-color: rgba(99, 102, 241, 0.1);
+            border-radius: 50%;
+            margin-right: 12px;
+            transition: all 0.3s ease;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%235768f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+          }
+        }
+        
+        &:hover h2::before {
+          transform: rotate(15deg) scale(1.1);
+          background-color: rgba(99, 102, 241, 0.2);
+        }
+        
+        &:hover h2 {
+          color: var(--primary-color);
+        }
+        
+        p {
+            margin: 8px 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: space-between;
+          
+          ion-badge {
+            height: 26px;
+            margin: 0;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 6px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            
+            &:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+            
+            &[color="success"] {
+              --background: rgba(0, 200, 150, 0.1);
+              --color: var(--success-color);
+            }
+            
+            &[color="danger"] {
+              --background: rgba(255, 90, 95, 0.1);
+              --color: var(--danger-color);
+            }
+            
+            &[color="primary"] {
+              --background: rgba(99, 102, 241, 0.1);
+              --color: var(--primary-color);
+            }
+          }
+          
+          ion-text {
+            &.ion-padding-start {
+              margin-left: 10px;
+            }
+            
+            small {
+              display: flex;
+              align-items: center;
+              color: var(--text-secondary);
+              
+              ion-icon {
+                margin-right: 4px;
+                font-size: 16px;
+                
+                &:not(:first-child) {
+                  margin-left: 16px;
+                }
+              }
+            }
+          }
+        }
+        
+        p.ion-padding-top {
+          margin-top: 12px;
+          padding-top: 12px;
+          border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .rating-stats {
+          display: flex;
+          gap: 6px;
+          flex-wrap: wrap;
+          margin-top: 8px;
+        }
+      }
+    }
+  }
+  
+  // Empty state animation
+  @keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+  }
+  
+  .ion-text-center ion-icon[name="call-outline"] {
+    animation: pulse 2s infinite ease-in-out;
+  }
+}
