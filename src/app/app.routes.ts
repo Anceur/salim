@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-// import{adminGuard} from './guards/admin.guard'
+import{adminGuard} from './guards/admin.guard'
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'loading', // Redirect to home by default
+    redirectTo: 'loading', 
     pathMatch: 'full'
   },
   {
@@ -23,21 +23,7 @@ export const routes: Routes = [
     path: 'register',
     loadComponent: () => import('./modules/auth/register/register.page').then(m => m.RegisterPage)
   },
-  {
-    path: 'requests',
-    loadComponent: () => import('./modules/admin/requests/requests.page').then(m => m.RequestsPage),
-    // canActivate: [adminGuard]
-  },
-  {
-    path: 'settings',
-    loadComponent: () => import('./modules/admin/settings/settings.page').then(m => m.SettingsPage),
-    // canActivate: [adminGuard]
-  },
-  {
-    path: 'users',
-    loadComponent: () => import('./modules/admin/users/users.page').then(m => m.UsersPage),
-    // canActivate: [adminGuard]
-  },
+
   {
     path: 'profile',
     loadComponent: () => import('./modules/trader/profile/profile.page').then( m => m.ProfilePage)
@@ -46,10 +32,7 @@ export const routes: Routes = [
     path: 'home',
     loadComponent: () => import('./modules/trader/home/home.page').then( m => m.HomePage)
   },
-  {
-    path: 'settings',
-    loadComponent: () => import('./modules/admin/settings/settings.page').then( m => m.SettingsPage)
-  },
+
   {
     path: 'editer',
     loadComponent: () => import('./modules/trader/editer/editer.page').then( m => m.EditerPage)
@@ -58,6 +41,17 @@ export const routes: Routes = [
     path: 'historic',
     loadComponent: () => import('./modules/trader/historic/historic.page').then( m => m.HistoricPage)
   },
+  {
+    path: 'tabs',
+    loadComponent: () => import('./modules/admin/tabs/tabs.page').then( m => m.TabsPage)
+  },
+
+  {
+    path: 'admin',
+    loadChildren: () => import('./modules/admin/admin.routes').then(m => m.adminRoutes),
+    canActivate: [adminGuard]
+  },
+
 
   
 

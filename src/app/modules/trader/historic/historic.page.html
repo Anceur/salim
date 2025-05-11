@@ -1,44 +1,52 @@
-<ion-content [fullscreen]="true">
+<ion-content [scrollY]="true" [fullscreen]="true">
   <div class="ion-padding">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" text=""></ion-back-button>
+      <ion-back-button defaultHref="/profile" text=""></ion-back-button>
     </ion-buttons>
     <h2 class="form-title">Historique des évaluations</h2>
     <div *ngIf="isLoading" class="ion-text-center">
       <ion-spinner></ion-spinner>
       <p>Chargement des données...</p>
     </div>
-
+    
     <div *ngIf="!isLoading && ratedPhones.length === 0" class="ion-text-center ion-padding">
       <ion-icon name="call-outline" style="font-size: 48px; color: #ccc;"></ion-icon>
       <p>Vous n'avez pas encore évalué de numéros de téléphone.</p>
     </div>
-
+    
     <ion-list *ngIf="!isLoading && ratedPhones.length > 0">
-      <ion-item *ngFor="let phone of ratedPhones">
-        <ion-label>
-          <h2>{{ phone.number }}</h2>
-          <p>
-            <ion-badge [color]="phone.isValid ? 'success' : 'danger'">
-              {{ phone.isValid ? 'Valide' : 'Non valide' }}
-            </ion-badge>
-            <ion-text class="ion-padding-start">
-              Évalué le {{ phone.updatedAt ? (phone.updatedAt.toDate() | date:'dd/MM/yyyy HH:mm') : (phone.createdAt.toDate() | date:'dd/MM/yyyy HH:mm') }}
-            </ion-text>
-          </p>
-          <p *ngIf="phone.comment">
-            <ion-text><strong>Commentaire:</strong> {{ phone.comment }}</ion-text>
-          </p>
-          <p class="ion-padding-top">
-            <ion-text>
-              <small>
-                <ion-icon name="thumbs-up-outline"></ion-icon> {{ phone.validRatings }} valides | 
-                <ion-icon name="thumbs-down-outline"></ion-icon> {{ phone.invalidRatings }} invalides
-              </small>
-            </ion-text>
-          </p>
-        </ion-label>
-      </ion-item>
+      <ion-item-sliding *ngFor="let phone of ratedPhones">
+        <ion-item>
+          <ion-label>
+            <h2>{{ phone.number }}</h2>
+            <p>
+              <ion-badge [color]="phone.isValid ? 'success' : 'danger'">
+                {{ phone.isValid ? 'Valide' : 'Non valide' }}
+              </ion-badge>
+              <ion-text class="ion-padding-start">
+                Évalué le {{ phone.updatedAt ? (phone.updatedAt.toDate() | date:'dd/MM/yyyy HH:mm') : (phone.createdAt.toDate() | date:'dd/MM/yyyy HH:mm') }}
+              </ion-text>
+            </p>
+            <p *ngIf="phone.comment">
+              <ion-text><strong>Commentaire:</strong> {{ phone.comment }}</ion-text>
+            </p>
+            <p class="ion-padding-top">
+              <ion-text>
+                <small>
+                  <ion-icon name="thumbs-up-outline"></ion-icon> {{ phone.validRatings }} valides | 
+                  <ion-icon name="thumbs-down-outline"></ion-icon> {{ phone.invalidRatings }} invalides
+                </small>
+              </ion-text>
+            </p>
+          </ion-label>
+        </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option color="danger" (click)="deletePhone(phone.phoneId)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+            Supprimer
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
     </ion-list>
   </div>
 </ion-content>

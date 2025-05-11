@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoadingController, NavController, ToastController, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonItem, IonLabel, IonInput } from '@ionic/angular/standalone';
+import { LoadingController, NavController, ToastController, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonItem, IonLabel, IonInput, IonIcon } from '@ionic/angular/standalone';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Firestore, doc, updateDoc, getDoc } from '@angular/fire/firestore';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { Keyboard } from '@capacitor/keyboard';
 import { IonBackButton, IonButtons } from '@ionic/angular/standalone';
-
+import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-editer',
@@ -27,18 +28,23 @@ import { IonBackButton, IonButtons } from '@ionic/angular/standalone';
     IonItem,
     IonLabel,
     IonInput,
-    IonBackButton, IonButtons
+    IonBackButton,
+    IonButtons,
+    IonIcon
   ]
 })
 export class EditerPage implements OnInit {
-
-
-
-
     profileForm: FormGroup;
     submitted = false;
     userProfile: any;
     originalPhoneNumber: string = '';
+    wilayas: string[] = [
+      'Adrar', 'Chlef', 'Laghouat', 'Oum El Bouaghi', 'Batna', 'Béjaïa', 'Biskra', 'Béchar', 'Blida', 'Bouira',
+      'Tamanrasset', 'Tébessa', 'Tlemcen', 'Tiaret', 'Tizi Ouzou', 'Alger', 'Djelfa', 'Jijel', 'Sétif', 'Saïda',
+      'Skikda', 'Sidi Bel Abbès', 'Annaba', 'Guelma', 'Constantine', 'Médéa', 'Mostaganem', 'M\'Sila', 'Mascara',
+      'Ouargla', 'Oran', 'El Bayadh', 'Illizi', 'Bordj Bou Arréridj', 'Boumerdès', 'El Tarf', 'Tindouf', 'Tissemsilt',
+      'El Oued', 'Khenchela', 'Souk Ahras', 'Tipaza', 'Mila', 'Aïn Defla', 'Naâma', 'Aïn Témouchent', 'Ghardaïa', 'Relizane'
+    ];
   
     constructor(
       private formBuilder: FormBuilder,
@@ -48,7 +54,8 @@ export class EditerPage implements OnInit {
       private toastCtrl: ToastController,
       private firestore: Firestore,
       private storageService: StorageService,
-      private authService: AuthService
+      private authService: AuthService,
+      private userService:UserService
     ) {
       this.profileForm = this.formBuilder.group({
         firstName: ['', [Validators.required]],
@@ -63,6 +70,10 @@ export class EditerPage implements OnInit {
     ngOnInit() {
       this.userProfile = this.storageService.getUserProfile();
       this.loadUserData();
+
+    Keyboard.setScroll({ isDisabled: false }); 
+
+
     }
   
     async loadUserData() {
@@ -78,13 +89,10 @@ export class EditerPage implements OnInit {
         });
         await loading.present();
   
-        const businessDocRef = doc(this.firestore, `businesses/${this.userProfile.uid}`);
-        const businessSnapshot = await getDoc(businessDocRef);
+        const data = await this.userService.getBusinessByUid(this.userProfile.uid);
   
-        if (businessSnapshot.exists()) {
-          const data = businessSnapshot.data();
+        if (data) {
           this.originalPhoneNumber = data['phoneNumber'] || '';
-          
           this.profileForm.patchValue({
             firstName: data['firstName'] || '',
             lastName: data['lastName'] || '',
@@ -132,17 +140,15 @@ export class EditerPage implements OnInit {
         }
   
         // Update business document in Firestore
-        const businessDocRef = doc(this.firestore, `businesses/${this.userProfile.uid}`);
-        await updateDoc(businessDocRef, {
+  
+        await this.userService.updateBusiness(this.userProfile.uid, {
           firstName: formData.firstName,
           lastName: formData.lastName,
           phoneNumber: formData.phoneNumber,
           businessName: formData.businessName,
           businessField: formData.businessField,
-          wilaya: formData.wilaya,
-          updatedAt: new Date()
+          wilaya: formData.wilaya
         });
-  
         // Update local storage
         const updatedProfile = {
           ...this.userProfile,

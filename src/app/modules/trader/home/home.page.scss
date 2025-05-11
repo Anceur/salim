@@ -82,6 +82,10 @@ ion-content {
 }
 
 
+ion-item{
+  --inner-border-width: 0px;
+}
+
 .custom-header {
   display: flex;
   justify-content: space-between;
@@ -160,6 +164,7 @@ ion-popover {
     --inner-padding-end: 16px;
     --min-height: 48px;
     --border-radius: 8px;
+    --inner-border-width: 0px;
     --background: white;
     --background-hover: rgba(90, 171, 252, 0.08);
     margin-bottom: 2px;
@@ -227,9 +232,9 @@ ion-popover {
     }
     
     ion-icon {
-      color: #3b82f6;
+      color: #000000;
+      background: #ffffff00;
       font-size: 24px;
-      animation: pulse 2s infinite ease-in-out;
     }
     
     ion-input {
@@ -244,6 +249,7 @@ ion-popover {
   --color: #fff;
   --border-radius: 80px;
   --padding-top: 10px;
+  border-radius: 80px;
   --padding-bottom: 10px;
   font-weight: 700;
   font-size: 1.1rem;
@@ -255,24 +261,7 @@ ion-popover {
   overflow: hidden;
   position: relative;
   
-  &::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: rgba(255, 255, 255, 0.2);
-    transform: rotate(45deg);
-    transition: all 0.5s ease;
-    opacity: 0;
-  }
-  
-  &:hover::before {
-    opacity: 1;
-    top: -100%;
-    left: -100%;
-  }
+
   
   &:active {
     transform: scale(0.95);
@@ -289,6 +278,7 @@ ion-popover {
   --padding-bottom: 10px;
   font-weight: 700;
   font-size: 1.1rem;
+  border-radius: 80px;
   box-shadow: 0 3px 18px rgba(67, 233, 123, 0.2);
   letter-spacing: 0.04em;
   margin-top: 16px;
@@ -296,28 +286,16 @@ ion-popover {
   overflow: hidden;
   position: relative;
   
-  &::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: rgba(255, 255, 255, 0.2);
-    transform: rotate(45deg);
-    transition: all 0.5s ease;
-    opacity: 0;
-  }
-  
-  &:hover::before {
-    opacity: 1;
-    top: -100%;
-    left: -100%;
-  }
-  
+
   &:active {
     transform: scale(0.95);
     box-shadow: 0 1px 8px rgba(67, 233, 123, 0.15);
+  }
+
+  &[disabled] {
+    box-shadow: none;
+    opacity: 0.4;
+    cursor: not-allowed;
   }
 }
 
@@ -367,6 +345,7 @@ ion-popover {
       --background: #ffffff;
       --border-radius: 16px;
       --padding-start: 16px;
+      --inner-border-width: 0px;
       --padding-end: 16px;
       --inner-padding-end: 0;
       margin-bottom: 16px;
@@ -463,11 +442,6 @@ ion-popover {
 ion-modal {
   --background: transparent;
   
-  &.custom-eval-modal {
-    .rating-box {
-      animation: fadeInUp 0.5s ease;
-    }
-  }
 
   .rating-box {
     padding: 25px 25px 100px 25px;
@@ -475,7 +449,7 @@ ion-modal {
     background: white;
     border: 1px solid rgba(23, 64, 167, 0.1);
     box-shadow: 0 16px 40px rgba(23, 64, 167, 0.12);
-    width: 100vh;
+    width: 100%;
     margin: 25% auto;
     position: absolute;
     bottom: -20%;

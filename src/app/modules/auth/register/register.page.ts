@@ -4,7 +4,24 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, LoadingController, ToastController } from '@ionic/angular';
 import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
+import { Keyboard } from '@capacitor/keyboard';
 import { StorageService } from 'src/app/core/services/storage.service';
+import { addIcons } from 'ionicons';
+import {
+  closeCircleOutline,
+  mailOutline,
+  callOutline,
+  lockClosedOutline,
+  logInOutline,
+  eyeOutline,
+  homeOutline,
+  briefcaseOutline,
+  buildOutline,
+  documentTextOutline,
+  arrowBack,
+  chevronDownOutline,
+} from 'ionicons/icons';
 
 
 @Component({
@@ -12,7 +29,7 @@ import { StorageService } from 'src/app/core/services/storage.service';
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule],
+  imports: [CommonModule, FormsModule, IonicModule , IonIcon],
 })
 export class RegisterPage {
   email = '';
@@ -35,6 +52,7 @@ export class RegisterPage {
   phoneNumberError = '';
   isEmailValid = true;
   emailError = '';
+  showPassword: boolean = false;
 
   constructor(
     private authService: AuthService, 
@@ -43,7 +61,22 @@ export class RegisterPage {
     private router: Router,
     private storageService: StorageService,
 
-  ) {}
+  ) {
+    addIcons({
+      closeCircleOutline,
+      mailOutline,
+      callOutline,
+      lockClosedOutline,
+      logInOutline,
+      eyeOutline,
+      homeOutline,
+      briefcaseOutline,
+      buildOutline,
+      documentTextOutline,
+      arrowBack,
+      chevronDownOutline
+    });
+  }
 
   wilayas: string[] = [
     'Adrar', 'Chlef', 'Laghouat', 'Oum El Bouaghi', 'Batna', 'Béjaïa', 'Biskra', 'Béchar',
@@ -57,7 +90,14 @@ export class RegisterPage {
   ];
 
 
+  ngOnInit() {
+    Keyboard.setScroll({ isDisabled: false }); // تمكين التمرير عند فتح لوحة المفاتيح
+  }
 
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
   // التحقق من فرادة رقم الهاتف
   async validatePhoneNumber() {
     try {
@@ -127,10 +167,10 @@ export class RegisterPage {
       }
   
       // التحقق من الموافقة على الشروط
-      if (!this.agreeTerms) {
-        this.presentToast("Veuillez accepter les Conditions d'utilisation");
-        return;
-      }
+      // if (!this.agreeTerms) {
+      //   this.presentToast("Veuillez accepter les Conditions d'utilisation");
+      //   return;
+      // }
   
       // التحقق من فرادة البريد الإلكتروني
       const isEmailValid = await this.validateEmail();
@@ -172,17 +212,17 @@ export class RegisterPage {
   }
 
   async onRegister() {
-    if (!this.agreeTerms) {
-      this.presentToast("Veuillez accepter les Conditions d'utilisation et la Politique de confidentialité");
-      return;
-    }
+    // if (!this.agreeTerms) {
+    //   this.presentToast("Veuillez accepter les Conditions d'utilisation et la Politique de confidentialité");
+    //   return;
+    // }
 
     if (!this.email || !this.password || !this.phoneNumber || !this.businessName || !this.businessField) {
       this.presentToast('Veuillez remplir tous les champs requis');
       return;
     }
 
-    // التحقق مرة أخرى من فرادة البريد الإلكتروني ورقم الهاتف
+  
     const isEmailValid = await this.validateEmail();
     if (!isEmailValid) {
       this.presentToast(this.emailError);
@@ -213,7 +253,7 @@ export class RegisterPage {
   
       const result = await this.authService.registerBusiness(registrationData, this.email, this.password);
       this.presentToast('Entreprise enregistrée avec succès !');
-      this.router.navigate(['/success']);
+      // this.router.navigate(['/success']);
     } catch (error: any) {
       this.presentToast(error.message || "Échec de l'enregistrement.");
     } finally {

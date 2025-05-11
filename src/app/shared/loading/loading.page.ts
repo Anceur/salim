@@ -4,6 +4,7 @@
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { IonContent, IonSpinner } from '@ionic/angular/standalone';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-loading',
@@ -21,7 +22,8 @@ export class LoadingPage implements OnInit, AfterViewInit {
 
   constructor(
     private router: Router,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
@@ -58,10 +60,18 @@ export class LoadingPage implements OnInit, AfterViewInit {
   }
 
   navigateToHome() {
-    // Use NgZone to ensure navigation happens in Angular zone
-    this.ngZone.run(() => {
-      console.log('Navigating to home page');
-      this.router.navigateByUrl('/home', { replaceUrl: true });
+    this.authService.getCurrentUser().subscribe(result => {
+      this.ngZone.run(() => {
+        if (result?.role === 'admin') {
+          console.log('Navigating to admin dashboard');
+          this.router.navigateByUrl('/admin', { replaceUrl: true });
+        } else {
+          console.log('Navigating to home page');
+          this.router.navigateByUrl('/home', { replaceUrl: true });
+        }
+      });
     });
   }
+  
+  
 } 

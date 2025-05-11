@@ -8,6 +8,9 @@ import { PhoneService } from 'src/app/core/services/phone.service';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 
+import { AlertController, LoadingController, ToastController } from '@ionic/angular';
+
+
 @Component({
   selector: 'app-historic',
   templateUrl: './historic.page.html',
@@ -40,7 +43,10 @@ export class HistoricPage implements OnInit {
   constructor(
     private phoneService: PhoneService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private alertController: AlertController,
+    private loadingController: LoadingController,
+    private toastController: ToastController
   ) { }
 
   ngOnInit() {
@@ -72,5 +78,65 @@ export class HistoricPage implements OnInit {
       console.error('Error loading rated phones:', error);
       this.isLoading = false;
     }
+  }
+  async deletePhone(phoneId: string) {
+    const alert = await this.alertController.create({
+      header: 'Confirmation',
+      message: 'Êtes-vous sûr de vouloir supprimer ce numéro de téléphone ? Cette action est irréversible.',
+      buttons: [
+        {
+          text: 'Annuler',
+          role: 'cancel'
+        },
+        {
+          text: 'Supprimer',
+          role: 'destructive',
+          handler: async () => {
+            await this.confirmDeletePhone(phoneId);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  async confirmDeletePhone(phoneId: string) {
+    const loading = await this.loadingController.create({
+      message: 'Suppression en cours...'
+    });
+    
+    await loading.present();
+    
+    try {
+      await this.phoneService.deletePhoneNumber(phoneId);
+      
+      // Update local data after successful deletion
+      this.ratedPhones = this.ratedPhones.filter(phone => phone.phoneId !== phoneId);
+      
+      this.showToast('Numéro supprimé avec succès');
+    } catch (error) {
+      console.error('Erreur lors de la suppression:', error);
+      let errorMessage = 'Erreur lors de la suppression du numéro.';
+      
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
+      this.showToast(errorMessage);
+    } finally {
+      await loading.dismiss();
+    }
+  }
+
+  async showToast(message: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      position: 'bottom',
+      color: message.includes('succès') ? 'success' : 'danger'
+    });
+    
+    await toast.present();
   }
 }

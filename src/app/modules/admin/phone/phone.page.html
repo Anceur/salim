@@ -1,0 +1,36 @@
+
+<ion-content class="admin-content">
+  <div class="form-header">
+    <h1 class="form-title">Phone Numbers</h1>
+  </div>
+
+  <!-- Phone numbers container -->
+  <div class="requests-container">
+    <div class="request-card" *ngFor="let phone of phoneNumbers">
+      <div class="request-header">
+        <div class="business-avatar">
+          <ion-icon name="call"></ion-icon>
+        </div>
+        <div class="request-info">
+          <h2>{{ phone.number }}</h2>
+          <p class="business-field">ID: {{ phone.id }}</p>
+        </div>
+      </div>
+      
+      <div class="request-details">
+        <div class="detail-item">
+          <span>Added on May 7, 2025</span>
+          <div class="action-buttons">
+            <ion-button color="danger" size="small">
+              Delete
+            </ion-button>
+          </div>
+        </div>
+
+      </div>
+      
+
+    </div>
+  </div>
+
+</ion-content>

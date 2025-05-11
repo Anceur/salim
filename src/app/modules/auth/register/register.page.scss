@@ -41,12 +41,20 @@ ion-button {
 ion-content {
   --background: #fff;
   
-  
-  .register-container {
-    max-width: 100%;
-    padding: 20px;
-    animation: fadeIn 0.5s ease-out;
-  }
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+
+.register-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  box-sizing: border-box;
+  animation: fadeIn 0.5s ease-out;
+}
   
   .form-header {
     display: flex;
@@ -68,7 +76,7 @@ ion-content {
     text-align: center;
     font-size: 24px;
     color: black;
-    margin-top: 50px;
+    margin-top: 43px;
     margin-bottom: 35px;
     
     .form-subtitle {
@@ -173,6 +181,7 @@ ion-content {
     ion-item {
       --background: #f7f9fc;
       --padding-start: 15px;
+      --inner-border-width: 0px;
       --padding-end: 15px;
       --inner-padding-end: 0;
       --min-height: 55px;
@@ -214,33 +223,40 @@ ion-content {
     }
     
     .terms-container {
-      display: flex;
-      align-items: center;
       margin: 20px 0;
-      padding-left: 5px;
+      padding: 0 5px;
       
-      ion-checkbox {
-        margin-right: 10px;
-        --size: 18px;
-        --border-radius: 4px;
-        --border-color: #cdd4e0;
-        --border-color-checked: #4a90e2;
-        --background-checked: #4a90e2;
-        --checkmark-color: white;
-        --checkbox-background: white;
-      }
-      
-      .terms-text {
-        font-size: 13px;
-        color: var(--ion-color-medium);
+      .terms-content {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
         
-        a {
-          color: #4a90e2;
-          text-decoration: none;
-          font-weight: 500;
+        ion-checkbox {
+          --size: 20px;
+          --border-radius: 4px;
+          --border-color: #4a90e2;
+          --border-color-checked: #4a90e2;
+          --background-checked: #4a90e2;
+          --checkmark-color: #ffffff;
+          flex-shrink: 0;
+          margin-top: 2px;
+        }
+        
+        .terms-text {
+          font-size: 14px;
+          color: var(--ion-color-medium);
+          line-height: 1.4;
           
-          &:hover {
-            text-decoration: underline;
+          a {
+            color: #4a90e2;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 4px 0;
+            display: inline-block;
+            
+            &:active {
+              opacity: 0.8;
+            }
           }
         }
       }
@@ -339,21 +355,22 @@ ion-content {
   align-items: center;
   padding: 8px 12px;
   background-color: #f7f9fc;
-}
 
-.select-icon {
-  font-size: 20px;
-  margin-right: 8px;
-  color: #555;
+  ion-icon {
+    color: var(--ion-color-medium);
+    margin-right: 10px;
+    font-size: 18px;
+  }
+
 }
 
 .native-phone-style {
-  width: 100%;
-  padding: 10px;
+  width: 72%;
+  padding: 10px 10px;
   font-size: 16px;
   color: rgba(0, 0, 0, 0.3411764706);
   background-color: transparent;
-  border: 1px solid rgb(0 74 205 / 0%);
+  border: 1px solid rgba(0, 74, 205, 0);
   border-radius: 12px;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -467,84 +484,20 @@ form {
   }
 }
 
-// Uncomment for dark mode support if needed
-/* 
-@media (prefers-color-scheme: dark) {
-  ion-content {
-    --background: linear-gradient(135deg, #1a1c23 0%, #282c3a 100%);
+.terms-item {
+  --background: transparent;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  margin: 10px 0;
+  
+  .terms-text {
+    white-space: normal;
+    font-size: 14px;
+    line-height: 1.4;
     
-    form {
-      background: #2a2d35;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      
-      ion-item {
-        --background: #373a43;
-        
-        ion-icon {
-          color: #a0aec0;
-        }
-        
-        ion-input {
-          --placeholder-color: #8795a9;
-        }
-      }
-      
-      .terms-container {
-        .terms-text {
-          color: #a0aec0;
-        }
-      }
-    }
-    
-    .form-header {
-      .form-title {
-        color: #f7f9fc;
-      }
-      
-      .form-subtitle {
-        color: #a0aec0;
-      }
-    }
-    
-    .progress-indicator {
-      .progress-bar {
-        background: #373a43;
-      }
-      
-      .step-indicators {
-        .step {
-          background: #373a43;
-          color: #a0aec0;
-        }
-      }
-    }
-    
-    .login-link {
-      color: #a0aec0;
-    }
-    
-    .file-upload-item {
-      background: #2a2d35;
-    }
-    
-    .file-preview {
-      background: #373a43;
-      border-color: #464a57;
-      
-      .file-info {
-        .file-name {
-          color: #f7f9fc;
-        }
-        
-        .file-size {
-          color: #a0aec0;
-        }
-      }
-    }
-    
-    .error-message {
-      color: #ff6b6b;
+    a {
+      color: var(--ion-color-primary);
+      text-decoration: none;
     }
   }
 }
-*/

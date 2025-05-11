@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonIcon, IonButtons, IonBackButton } from '@ionic/angular/standalone';
-import { Firestore, collection, query, where, getDocs, updateDoc, doc, getDoc, onSnapshot } from '@angular/fire/firestore';
 import { addIcons } from 'ionicons';
 import { 
   businessOutline, mailOutline, callOutline, locationOutline, 
@@ -10,6 +9,8 @@ import {
   checkmarkCircleOutline
 } from 'ionicons/icons';
 import { ModalController, AlertController, ToastController } from '@ionic/angular';
+
+import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-requests',
@@ -34,7 +35,7 @@ export class RequestsPage implements OnInit {
   unsubscribe: any;
 
   constructor(
-    private firestore: Firestore,
+    private userservice: UserService,
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
     private toastCtrl: ToastController
@@ -63,50 +64,23 @@ export class RequestsPage implements OnInit {
   }
 
   setupRealtimeListener() {
-    const q = query(
-      collection(this.firestore, 'businesses'),
-      where('status', '==', 'pending')
-    );
-    
-    this.unsubscribe = onSnapshot(q, (snapshot) => {
-      this.pendingAccounts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    this.unsubscribe = this.userservice.listenToPendingAccounts((accounts) => {
+      this.pendingAccounts = accounts;
     });
   }
 
   async loadPendingAccounts() {
-    const q = query(
-      collection(this.firestore, 'businesses'),
-      where('status', '==', 'pending')
-    );
-
-    const querySnapshot = await getDocs(q);
-    this.pendingAccounts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    this.pendingAccounts = await this.userservice.getPendingAccounts();
   }
 
   async loadStatistics() {
-    const approvedQuery = query(
-      collection(this.firestore, 'businesses'),
-      where('status', '==', 'approved')
-    );
-    
-    const rejectedQuery = query(
-      collection(this.firestore, 'businesses'),
-      where('status', '==', 'rejected')
-    );
-
-    const approvedSnapshot = await getDocs(approvedQuery);
-    const rejectedSnapshot = await getDocs(rejectedQuery);
-    
-    this.approvedCount = approvedSnapshot.size;
-    this.rejectedCount = rejectedSnapshot.size;
+    this.approvedCount = await this.userservice.getBusinessCountByStatus('approved');
+    this.rejectedCount = await this.userservice.getBusinessCountByStatus('rejected');
   }
 
   async validateAccount(accountId: string) {
     try {
-      const businessRef = doc(this.firestore, `businesses/${accountId}`);
-      await updateDoc(businessRef, {
-        status: 'approved'
-      });
+      await this.userservice.updateBusinessStatus(accountId, 'approved');
       
       // Update statistics
       this.approvedCount++;
@@ -131,10 +105,7 @@ export class RequestsPage implements OnInit {
           text: 'Reject',
           handler: async () => {
             try {
-              const businessRef = doc(this.firestore, `businesses/${accountId}`);
-              await updateDoc(businessRef, {
-                status: 'rejected'
-              });
+              await this.userservice.updateBusinessStatus(accountId, 'rejected');
               
               // Update statistics
               this.rejectedCount++;
@@ -197,17 +168,17 @@ export class RequestsPage implements OnInit {
                 createdAt: new Date()
               };
               
-              await this.saveMeetingToDatabase(meetingData);
+              await this.userservice.saveMeeting(meetingData);
               
               // Send notification to business owner (would be implemented with proper notification service)
               this.notifyBusinessOwner(account, meetLink, data.date, data.time);
               
               this.showToast('Meeting scheduled successfully');
-              return true; // Add this line to return a value
+              return true;
             } catch (error) {
               this.showAlert('Error', 'Failed to schedule meeting. Please try again.');
               console.error('Error scheduling meeting:', error);
-              return false; // Add this line to return a value
+              return false;
             }
           }
         }
@@ -215,24 +186,6 @@ export class RequestsPage implements OnInit {
     });
 
     await alert.present();
-  }
-
-  async saveMeetingToDatabase(meetingData: any) {
-    // Add meeting to Firestore collection
-    const meetingsCollection = collection(this.firestore, 'meetings');
-    // Actual implementation would use addDoc to save the meeting data
-    console.log('Saving meeting data:', meetingData);
-    
-    // Also update the business document with meeting info
-    const businessRef = doc(this.firestore, `businesses/${meetingData.businessId}`);
-    await updateDoc(businessRef, {
-      meetingScheduled: true,
-      meetingDetails: {
-        date: meetingData.date,
-        time: meetingData.time,
-        link: meetingData.meetLink
-      }
-    });
   }
 
   notifyBusinessOwner(account: any, meetLink: string, date: string, time: string) {

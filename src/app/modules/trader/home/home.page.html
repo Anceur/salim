@@ -1,6 +1,6 @@
-<ion-content >
+<ion-content [fullscreen]="true" scrollY="true" keyboard-attach="true" scrollEvents="true">
 
-  <!-- Header -->
+
   <div class="custom-header">
     <h1 class="page-title">MOUDIR<br>LIST</h1>
     <div class="profile-container">
@@ -37,13 +37,14 @@
     <img src="assets/images/logo.png" alt="Répertoire Téléphonique" class="feature-image" style="width: 100%; height: auto;">
 
     <ion-item class="search-item">
+      <ion-icon name="call-outline" slot="start" color="black"></ion-icon>
       <ion-input [(ngModel)]="searchQuery" placeholder="Rechercher des numéros..."></ion-input>
     </ion-item>
 
     <!-- Buttons -->
-    <ion-button expand="block" (click)="openEvaluationDialog()" class="ion-margin-top add-number-btn" >
+    <ion-button expand="block" (click)="openEvaluationDialog()" class="ion-margin-top add-number-btn" [disabled]="userStatus !== 'approved'">
       <ion-icon name="add-outline" slot="start"></ion-icon>
-      Ajouter un numéro
+      {{ userStatus === 'approved' ? 'Ajouter un numéro' : 'En attente d\'approbation' }}
     </ion-button>
 
     <ion-button expand="block" class="ion-margin-top checkout-btn"  (click)="searchPhoneNumber()">

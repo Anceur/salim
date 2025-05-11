@@ -1,92 +1,87 @@
-<ion-header class="admin-header">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/users" text=""></ion-back-button>
-    </ion-buttons>
-    <ion-title>
-      <div class="title-container">
-        <ion-icon name="business-outline"></ion-icon>
-        <span>Business Requests</span>
-      </div>
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+
+
 
 <ion-content class="ion-padding admin-content">
-  <div class="stats-container">
-    <div class="stat-card">
-      <div class="stat-value">{{pendingAccounts.length}}</div>
-      <div class="stat-label">Pending</div>
+
+<div class="form-header">
+<h2 class="form-title">Secteur d’activité </h2>
+</div>
+
+<div class="stats-container">
+
+<div class="stat-card">
+  <div class="stat-value">{{pendingAccounts.length}}</div>
+  <div class="stat-label">En attente</div>
+</div>
+<div class="stat-card">
+  <div class="stat-value">{{approvedCount}}</div>
+  <div class="stat-label">Validé</div>
+</div>
+<div class="stat-card">
+  <div class="stat-value">{{rejectedCount}}</div>
+  <div class="stat-label">Rejeté</div>
+</div>
+</div>
+
+<div class="requests-container" *ngIf="pendingAccounts.length > 0">
+<div class="request-card" *ngFor="let account of pendingAccounts">
+  <div class="request-header">
+    <div class="business-avatar">{{account.businessName.charAt(0)}}</div>
+    <div class="request-info">
+      <h2>{{account.businessName}}</h2>
+      <p class="business-field">{{account.businessField}}</p>
     </div>
-    <div class="stat-card">
-      <div class="stat-value">{{approvedCount}}</div>
-      <div class="stat-label">Approved</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value">{{rejectedCount}}</div>
-      <div class="stat-label">Rejected</div>
-    </div>
-  </div>
-
-  <div class="requests-container" *ngIf="pendingAccounts.length > 0">
-    <div class="request-card" *ngFor="let account of pendingAccounts">
-      <div class="request-header">
-        <div class="business-avatar">{{account.businessName.charAt(0)}}</div>
-        <div class="request-info">
-          <h2>{{account.businessName}}</h2>
-          <p class="business-field">{{account.businessField}}</p>
-        </div>
-        <div class="status-badge {{account.status}}">
-          {{account.status}}
-        </div>
-      </div>
-
-      <div class="request-details">
-        <div class="detail-item">
-          <ion-icon name="mail-outline"></ion-icon>
-          <span>{{account.email}}</span>
-        </div>
-        <div class="detail-item">
-          <ion-icon name="call-outline"></ion-icon>
-          <span>{{account.phoneNumber || 'Not provided'}}</span>
-        </div>
-        <div class="detail-item">
-          <ion-icon name="location-outline"></ion-icon>
-          <span>{{account.wilaya || 'Not provided'}}</span>
-        </div>
-      </div>
-
-      <div *ngIf="account.proofUrl" class="proof-preview">
-        <div class="proof-label">Business Proof:</div>
-        <div class="proof-thumbnail" [style.backgroundImage]="'url(' + account.proofUrl + ')'"></div>
-        <ion-button fill="clear" size="small" (click)="viewProof(account.proofUrl)">
-          <ion-icon name="eye-outline" slot="start"></ion-icon>
-          View
-        </ion-button>
-      </div>
-
-      <div class="action-buttons">
-        <ion-button color="success" (click)="validateAccount(account.id)">
-          <ion-icon name="checkmark-outline" slot="start"></ion-icon>
-          Approve
-        </ion-button>
-        
-        <ion-button color="medium" (click)="createMeeting(account)">
-          <ion-icon name="videocam-outline" slot="start"></ion-icon>
-          Schedule Meet
-        </ion-button>
-        
-        <ion-button color="danger" (click)="rejectAccount(account.id)">
-          <ion-icon name="close-outline" slot="start"></ion-icon>
-          Reject
-        </ion-button>
-      </div>
+    <div class="status-badge {{account.status}}">
+      {{account.status}}
     </div>
   </div>
 
-  <div class="empty-state" *ngIf="pendingAccounts.length === 0">
-    <ion-icon name="checkmark-circle-outline"></ion-icon>
-    <h3>All caught up!</h3>
-    <p>There are no pending business accounts to review.</p>
+  <div class="request-details">
+    <div class="detail-item">
+      <ion-icon name="mail-outline"></ion-icon>
+      <span>{{account.email}}</span>
+    </div>
+    <div class="detail-item">
+      <ion-icon name="call-outline"></ion-icon>
+      <span>{{account.phoneNumber || 'Not provided'}}</span>
+    </div>
+    <div class="detail-item">
+      <ion-icon name="location-outline"></ion-icon>
+      <span>{{account.wilaya || 'Not provided'}}</span>
+    </div>
   </div>
+
+  <div *ngIf="account.proofUrl" class="proof-preview">
+    <div class="proof-label">Preuve d’activité professionnelle:</div>
+    <div class="proof-thumbnail" [style.backgroundImage]="'url(' + account.proofUrl + ')'"></div>
+    <ion-button fill="clear" size="small" (click)="viewProof(account.proofUrl)">
+      <ion-icon name="eye-outline" slot="start"></ion-icon>
+      Voir
+    </ion-button>
+  </div>
+
+  <div class="action-buttons">
+    <ion-button color="success" (click)="validateAccount(account.id)">
+      <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+      Validé
+    </ion-button>
+    
+    <ion-button color="medium" (click)="createMeeting(account)">
+      <ion-icon name="videocam-outline" slot="start"></ion-icon>
+      Planifier une réunion
+    </ion-button>
+    
+    <ion-button color="danger" (click)="rejectAccount(account.id)">
+      <ion-icon name="close-outline" slot="start"></ion-icon>
+      Rejeté
+    </ion-button>
+  </div>
+</div>
+</div>
+
+<div class="empty-state" *ngIf="pendingAccounts.length === 0">
+<ion-icon name="checkmark-circle-outline"></ion-icon>
+<h3>Tout est à jour!</h3>
+<p>Il n’y a aucun compte professionnel en attente de révision..</p>
+</div>
 </ion-content>

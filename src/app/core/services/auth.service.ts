@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, fetchSignInMethodsForEmail, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
-import { Firestore, doc, setDoc, collection, query, where, getDocs } from '@angular/fire/firestore';
+import { Auth, createUserWithEmailAndPassword, fetchSignInMethodsForEmail, onAuthStateChanged, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
+import { Firestore, doc, setDoc, collection, query, where, getDocs, getDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { StorageService } from './storage.service';
 
 @Injectable({
@@ -46,21 +46,29 @@ export class AuthService {
       throw error;
     }
   }
-
   async isEmailUnique(email: string): Promise<boolean> {
+    if (!email || !email.trim()) {
+      console.warn('Email is empty or invalid.');
+      return false;
+    }
+  
     try {
-      const methods = await fetchSignInMethodsForEmail(this.auth, email);
-
-      const businessesRef = collection(this.firestore, 'businesses');
-      const businessQ = query(businessesRef, where('email', '==', email));
-      const businessQuerySnapshot = await getDocs(businessQ);
-
+      const [methods, businessQuerySnapshot] = await Promise.all([
+        fetchSignInMethodsForEmail(this.auth, email),
+        getDocs(query(collection(this.firestore, 'businesses'), where('email', '==', email)))
+      ]);
+  
+      console.log('Auth methods:', methods);
+      console.log('Business docs found:', businessQuerySnapshot.size);
+  
+     
       return methods.length === 0 && businessQuerySnapshot.empty;
     } catch (error) {
       console.error('Erreur lors de la vérification de l\'unicité de l\'email:', error);
       throw error;
     }
   }
+  
 
   async registerBusiness(data: any, email: string, password: string) {
     try {
@@ -89,14 +97,14 @@ export class AuthService {
         createdAt: new Date()
       });
 
-      if (data.phoneNumber) {
-        const phoneRef = doc(collection(this.firestore, 'phoneNumbers'));
-        await setDoc(phoneRef, {
-          number: data.phoneNumber,
-          userId: uid,
-          createdAt: new Date()
-        });
-      }
+      // if (data.phoneNumber) {
+      //   const phoneRef = doc(collection(this.firestore, 'phoneNumbers'));
+      //   await setDoc(phoneRef, {
+      //     number: data.phoneNumber,
+      //     userId: uid,
+      //     createdAt: new Date()
+      //   });
+      // }
 
       this.storageService.setUserProfile({
         uid,
@@ -118,22 +126,23 @@ export class AuthService {
     }
   }
 
-  // Fin enregistrement
 
-  //login
-  async login(email: string, password: string): Promise<void> {
+  async login(email: string, password: string): Promise<{ role: string } | null> {
     try {
       const result = await signInWithEmailAndPassword(this.auth, email, password);
-
+  
       if (result.user) {
-        // Fetch user profile data from Firestore
-        const businessRef = doc(this.firestore, `businesses/${result.user.uid}`);
-        const businessSnapshot = await getDocs(query(collection(this.firestore, 'businesses'), where('uid', '==', result.user.uid)));
-        
-        if (!businessSnapshot.empty) {
-          const businessData = businessSnapshot.docs[0].data();
-          
-          // Store user profile in local storage
+        const snapshot = await getDocs(
+          query(
+            collection(this.firestore, 'businesses'),
+            where('uid', '==', result.user.uid)
+          )
+        );
+  
+        if (!snapshot.empty) {
+          const businessData = snapshot.docs[0].data();
+  
+     
           this.storageService.setUserProfile({
             uid: result.user.uid,
             email: businessData['email'],
@@ -143,11 +152,13 @@ export class AuthService {
             status: businessData['status'],
             businessName: businessData['businessName'] || ''
           });
-          
+  
           this.authStateSource.next(true);
-          this.router.navigate(['/home']);
+          return { role: businessData['role'] };
         }
       }
+  
+      return null;
     } catch (error: any) {
       let errorMessage = 'Échec de la connexion';
 
@@ -182,5 +193,35 @@ export class AuthService {
     } catch (error: any) {
       return Promise.reject(error);
     }
+  }
+
+
+
+
+
+
+
+  getCurrentUser(): Observable<{ uid: string; email: string; role: string } | null> {
+    return new Observable(observer => {
+      onAuthStateChanged(this.auth, async user => {
+        if (user) {
+          const userDocRef = doc(this.firestore, `businesses/${user.uid}`);
+          const userSnap = await getDoc(userDocRef);
+
+          if (userSnap.exists()) {
+            const userData = userSnap.data() as any;
+            observer.next({
+              uid: user.uid,
+              email: user.email!,
+              role: userData.role
+            });
+          } else {
+            observer.next(null);
+          }
+        } else {
+          observer.next(null);
+        }
+      });
+    });
   }
 }

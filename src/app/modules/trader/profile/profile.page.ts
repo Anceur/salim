@@ -6,6 +6,7 @@ import { StorageService } from 'src/app/core/services/storage.service';
 import { Router } from '@angular/router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { Keyboard } from '@capacitor/keyboard';
 import { FirebasestorageService } from 'src/app/core/services/firebasestorage.service';
 
 @Component({
@@ -29,7 +30,12 @@ export class ProfilePage implements OnInit {
     private loadingController: LoadingController
   ) {}
 
-  ngOnInit() {
+
+
+
+  ngOnInit() {  
+    
+    Keyboard.setScroll({ isDisabled: false });
     this.userProfile = this.storageService.getUserProfile();
     console.log('userProfile:', this.userProfile);
     
@@ -49,6 +55,9 @@ export class ProfilePage implements OnInit {
 
   goToEditProfile() {
     this.router.navigate(['/editer']);
+  }
+  back(){
+    this.router.navigate(['/home']);
   }
 
   goToHistoric() {

@@ -9,11 +9,10 @@
     --transition-speed: 0.3s;
   }
   
-  /* Main container */
   .edit-profile-container {
     padding: 20px;
     background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
-    min-height: 100%;
+    min-height: auto; 
   }
   
   /* Header */
@@ -32,6 +31,7 @@
     text-align: left;
     font-size: 3.5rem;
     color: #5aabfc;
+    text-transform: uppercase;
   }
   
   .edit-header p {
@@ -87,10 +87,57 @@
     margin-bottom: 15px;
   }
   
+  .select-container {
+    position: relative;
+    background: #f7f9fc;
+    border: 1px solid #004acd85;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    min-height: 55px;
+
+    ion-icon {
+      color: var(--ion-color-medium);
+      margin-right: 10px;
+      font-size: 18px;
+      
+      &.password-toggle {
+        margin-right: 0;
+        margin-left: auto;
+        opacity: 0.6;
+      }
+    }
+
+    select {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 12px 8px;
+      font-size: 15px;
+      color: var(--text-color);
+      appearance: none;
+      outline: none;
+      cursor: pointer;
+      width: 100%;
+
+      &:focus {
+        outline: none;
+      }
+
+      option {
+        padding: 10px;
+      }
+    }
+  }
+  
   ion-item {
     --background: #f9fafc;
     --border-radius: 8px;
     border-radius: 20px;
+    --inner-border-width: 0px;
     border: 1px solid #5aabfc;
     --padding-start: 15px;
     --padding-end: 15px;
@@ -100,6 +147,18 @@
     margin-bottom: 8px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     transition: box-shadow var(--transition-speed);
+
+    select {
+      width: 100%;
+      background: transparent;
+      border: none;
+      padding: 12px 8px;
+      font-size: 15px;
+      color: var(--text-color);
+      appearance: none;
+      outline: none;
+      cursor: pointer;
+    }
   }
   
   ion-item:hover {

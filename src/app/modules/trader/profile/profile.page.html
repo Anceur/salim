@@ -1,4 +1,4 @@
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" scrollY="true" [scrollEvents]="true">
   <div class="profile-container">
     
     <div class="profile-title">
@@ -14,8 +14,7 @@
         </div>
       </div>
       
-      <h1>{{ userProfile.firstName }} </h1>
-      <h1>{{ userProfile.lastName }}</h1>
+      <h1>{{ userProfile.firstName }} {{ userProfile.lastName }}</h1>
       <p>{{ userProfile.businessName }}</p>
       
       <!-- Navigation Buttons -->
@@ -34,8 +33,14 @@
 
   <!-- New Buttons -->
   <div class="action-buttons">
-    <ion-button expand="block" color="danger" class="logout-button" (click)="logout()">
+
+
+    <ion-button expand="block" color="" class="logout-button" (click)="logout()">
       <span>Déconnecter</span>
+    </ion-button>
+
+    <ion-button expand="block" color="" class="Annuler-button" (click)="back()">
+      <span>Annuler</span>
     </ion-button>
   </div>
 </div>

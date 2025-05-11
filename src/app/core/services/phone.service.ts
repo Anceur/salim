@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Firestore, doc, setDoc, collection, collectionData, query, where, getDocs, updateDoc, addDoc, increment, getDoc } from '@angular/fire/firestore';
+import { Firestore, doc, setDoc, collection, collectionData, query, where, getDocs, updateDoc, addDoc, increment, getDoc, deleteDoc } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -196,7 +197,53 @@ export class PhoneService {
     }
   }
 
-  
+  // Delete a phone number from the database
+  async deletePhoneNumber(phoneId: string) {
+    try {
+      const user = this.auth.currentUser;
+      if (!user) throw new Error('Utilisateur non connecté');
+
+      // 1. Delete the phone number document
+      const phoneRef = doc(this.firestore, 'phoneNumbers', phoneId);
+      
+      // Check if the phone belongs to the current user
+      const phoneDoc = await getDoc(phoneRef);
+      if (!phoneDoc.exists()) {
+        throw new Error('Numéro de téléphone non trouvé');
+      }
+      
+      const phoneData = phoneDoc.data();
+      if (phoneData['userId'] !== user.uid) {
+        throw new Error('Vous n\'êtes pas autorisé à supprimer ce numéro');
+      }
+      
+      // 2. Find and delete all ratings for this phone
+      const ratingCollectionRef = collection(this.firestore, 'phoneRating');
+      const phoneRatingsQuery = query(
+        ratingCollectionRef,
+        where('phoneId', '==', phoneId)
+      );
+      
+      const ratingsSnapshot = await getDocs(phoneRatingsQuery);
+      
+      // Delete all ratings in a batch
+      const deletionPromises = ratingsSnapshot.docs.map(ratingDoc => {
+        const ratingRef = doc(this.firestore, 'phoneRating', ratingDoc.id);
+        return deleteDoc(ratingRef);
+      });
+      
+      // 3. Wait for all rating deletions to complete
+      await Promise.all(deletionPromises);
+      
+      // 4. Delete the phone document itself
+      await deleteDoc(phoneRef);
+      
+      return true;
+    } catch (error) {
+      console.error('Erreur lors de la suppression du numéro:', error);
+      throw error;
+    }
+  }
 
   // Search for phone numbers that match a query
   async searchPhoneNumber(query: string) {
@@ -227,6 +274,10 @@ export class PhoneService {
     }
   }
 
+  getPhoneNumbers(): Observable<any[]> {
+    const phoneCollectionRef = collection(this.firestore, 'phoneNumbers');
+    return collectionData(phoneCollectionRef, { idField: 'id' }) as Observable<any[]>;
+  }
 
   
 }

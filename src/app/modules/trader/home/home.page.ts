@@ -12,10 +12,12 @@ import { AuthService } from '../../../core/services/auth.service';
 import { PhoneService } from '../../../core/services/phone.service';
 import { StorageService } from '../../../core/services/storage.service';
 import { addIcons } from 'ionicons';
+import { Keyboard } from '@capacitor/keyboard';
 import { 
   callOutline, searchOutline, addOutline, logOutOutline, personOutline, 
   logInOutline, search, closeCircleOutline, call
 } from 'ionicons/icons';
+import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-home',
@@ -50,6 +52,7 @@ export class HomePage implements OnInit {
   searchQuery: string = '';
   showSearchPrompt: boolean = true;
   isAuthenticated: boolean = false;
+  userStatus: string = '';
 
   // Properties for the evaluation dialog
   showEvaluation: boolean = false;
@@ -64,7 +67,8 @@ export class HomePage implements OnInit {
     private phoneService: PhoneService,
     private storageService: StorageService,
     private loadingCtrl: LoadingController,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    private userService: UserService
   ) {
     // Add Ionic icons
     addIcons({
@@ -74,23 +78,34 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit() {
-    // Check authentication state
-    this.authService.authState.subscribe(isAuthenticated => {
+    Keyboard.setScroll({ isDisabled: false });
+
+    
+    this.authService.authState.subscribe(async isAuthenticated => {
+      console.log('Authentication state changed:', isAuthenticated);
       this.isAuthenticated = isAuthenticated;
+      if (isAuthenticated) {
+        // Get user profile from storage to get the user ID
+        const userProfile = this.storageService.getUserProfile();
+        if (userProfile && userProfile.uid) {
+          // Get user status directly from Firebase
+          this.userStatus = await this.userService.getCurrentUserStatus(userProfile.uid);
+          console.log('User status from Firebase:', this.userStatus);
+        }
+      }
     });
     
     // Load all phone numbers
     this.loadPhoneNumbers();
   }
 
-  // Load phone numbers from Firestore
+
   async loadPhoneNumbers() {
     try {
-      const phoneCollectionRef = collection(this.firestore, 'phoneNumbers');
-      collectionData(phoneCollectionRef, { idField: 'id' }).subscribe(
+      this.phoneService.getPhoneNumbers().subscribe(
         (data: any[]) => {
           this.phoneNumbers = data;
-          this.searchPhoneNumber(); // Update filtered numbers if search query exists
+          this.searchPhoneNumber();
         }
       );
     } catch (error: any) {
@@ -98,7 +113,6 @@ export class HomePage implements OnInit {
       this.presentToast('Erreur lors du chargement des numéros');
     }
   }
-
   // Search for phone numbers
   async searchPhoneNumber() {
     if (this.searchQuery && this.searchQuery.trim() !== '') {
@@ -121,6 +135,12 @@ export class HomePage implements OnInit {
       this.router.navigate(['/login']);
       return;
     }
+
+    if (this.userStatus !== 'approved') {
+      this.presentToast('Veuillez attendre l\'approbation de votre compte pour ajouter des numéros');
+      return;
+    }
+
     this.showEvaluation = true;
   }
 

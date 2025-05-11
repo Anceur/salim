@@ -2,8 +2,15 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
-  appName: 'salim',
-  webDir: 'www'
-};
+  appName: 'Moudir List',
+  webDir: 'www',
+
+plugins: {
+  Keyboard: {
+    resize: 'body',
+    resizeOnFullScreen: true,
+  },
+},
+}
 
 export default config;

@@ -1,7 +1,4 @@
-<ion-content>
-  <ion-button slot="start">
-    <ion-back-button defaultHref="/profile"></ion-back-button>
-  </ion-button>
+<ion-content  [scrollY]="true" [fullscreen]="true">
 
   <div class="edit-profile-container">
     <div class="edit-header">
@@ -77,8 +74,10 @@
 
         <div class="form-group">
           <ion-item>
-            <ion-label position="floating">Wilaya</ion-label>
-            <ion-input formControlName="wilaya" type="text"></ion-input>
+            <select formControlName="wilaya" class="native-phone-style">
+              <option [value]="profileForm.get('wilaya')?.value" selected>{{ profileForm.get('wilaya')?.value || 'Wilaya' }}</option>
+              <option *ngFor="let w of wilayas" [value]="w">{{ w }}</option>
+            </select>
           </ion-item>
         </div>
       </div>

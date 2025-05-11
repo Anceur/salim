@@ -1,0 +1,23 @@
+
+
+<ion-tabs >
+
+  <ion-tab-bar slot="bottom" class="mobile-tabs">
+    <ion-tab-button tab="dashboard" (click)="navigateTo('dashboard')">
+      <ion-icon name="grid-outline"></ion-icon>
+      <ion-label>Dashboard</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="requests" (click)="navigateTo('requests')">
+      <ion-icon name="people-outline"></ion-icon>
+      <ion-label>Requests</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="phone" (click)="navigateTo('phone')">
+      <ion-icon name="call-outline"></ion-icon>
+      <ion-label>Telephone</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+
+  <!-- <ion-router-outlet></ion-router-outlet> -->
+</ion-tabs>

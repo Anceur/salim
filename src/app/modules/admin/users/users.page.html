@@ -1,139 +1,178 @@
-<ion-app>
-  <!-- Side Menu -->
-  <ion-menu contentId="main-content" type="overlay">
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>CoteAdmin</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
-      <ion-list>
-        <ion-item button routerLink="/dashboard" routerDirection="root" class="active">
-          <ion-icon slot="start" name="grid-outline"></ion-icon>
-          <ion-label>Dashboard</ion-label>
-        </ion-item>
-        <ion-item button (click)="goRequests()" routerDirection="root">
-          <ion-icon slot="start" name="people-outline"></ion-icon>
-          <ion-label>Requests</ion-label>
-        </ion-item>
-        <ion-item button (click)="goSetting()" routerDirection="root">
-          <ion-icon slot="start" name="settings-outline"></ion-icon>
-          <ion-label>Settings</ion-label>
-        </ion-item>
-      </ion-list>
-      <ion-list>
-        <ion-list-header>
-          <ion-label>Account</ion-label>
-        </ion-list-header>
-        <ion-item button (click)="goProfile()" routerDirection="root">
-          <ion-icon slot="start" name="person-outline"></ion-icon>
-          <ion-label>Profile</ion-label>
-        </ion-item>
-        <ion-item button (click)="goLogout()" routerDirection="root">
-          <ion-icon slot="start" name="log-out-outline"></ion-icon>
-          <ion-label>Logout</ion-label>
-        </ion-item>
-      </ion-list>
-    </ion-content>
-    
-  </ion-menu>
-
+<ion-app scrollY="true" keyboard-attach="true" scrollEvents="true">
+ 
   <!-- Main Content -->
   <div class="ion-page" id="main-content">
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-menu-button></ion-menu-button>
-        </ion-buttons>
-        <ion-title>Dashboard</ion-title>
-        <ion-buttons slot="end">
-          <ion-button>
-            <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
-            <ion-badge color="danger">5</ion-badge>
-          </ion-button>
-          <ion-button>
-            <ion-avatar>
-              <img src="../../../../assets/images/admin.jpeg">
-            </ion-avatar>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-     
-    </ion-header>
+    <ion-content [fullscreen]="true" [scrollY]="true" [scrollEvents]="true">
+      <div class="ion-padding">
+        <!-- Dashboard Overview -->
+        <div class="custom-header">
+          <h1 class="dashboard-header">ADMIN <br> DASHBOARD</h1>
+          <div class="profile-container">
+            <ion-button id="profile-trigger">
+              <img src="assets/images/admin.jpeg" alt="Profil" class="profile-image">
+            </ion-button>
+            <ion-button id="logout"(click)="logout()">
+             logout
+            </ion-button>
+          </div>
+        </div>
 
-    <ion-content class="ion-padding">
-      <!-- Dashboard Overview -->
-        <ion-row>
-          <ion-col size="12" size-md="6" size-lg="3">
-            <ion-card class="stat-card">
-              <ion-card-content>
-                <ion-badge color="success">+12%</ion-badge>
-                <div class="stat-icon bg-primary">
-                  <ion-icon name="people-outline"></ion-icon>
+        <!-- Stats Cards -->
+        <div class="stats-container">
+          <!-- Earnings Card -->
+          <ion-card class="stat-card earnings-card">
+            <ion-card-content>
+              <div class="stat-content">
+                <div class="stat-graph">
+                  <svg viewBox="0 0 100 30" class="mini-graph">
+                    <path d="M0,15 Q10,5 20,15 T40,15 T60,5 T80,20 T100,15" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"/>
+                  </svg>
                 </div>
-                <div class="stat-details">
-                  <h2>{{ totalUsers$ | async }}</h2>
-                  <p>Total Users</p>
-               
+                <h3>Users</h3>
+                <div class="stat-value">{{ (totalUsers$ | async) || 0 }}</div>
+                <div class="stat-change">+ 10% depuis le mois dernier</div>
+              </div>
+            </ion-card-content>
+          </ion-card>
+
+          <!-- Right Column Stats -->
+          <div class="stat-group">
+            <!-- Rank Card -->
+            <ion-card class="stat-card projects-card">
+              <ion-card-content>
+                <div class="stat-content">
+                  <div class="stat-number">{{pendingAccounts.length}}</div>
+                  <div class="stat-details-red">
+                    <h3>Pending</h3>
+                    <p></p>
+                  </div>
                 </div>
               </ion-card-content>
             </ion-card>
-          </ion-col>
-        </ion-row>
 
-      <!-- Recent Orders -->
-      <ion-grid>
-        <ion-row>
-        <tr *ngFor="let user of businesses">
-        
-          <td>
-            <div class="customer-info">
-              <ion-avatar>
-                <img [src]="user.profileImageUrl || 'https://gravatar.com/avatar/?d=identicon'">
-              </ion-avatar>
-              <span>{{ user.firstName }} {{ user.lastName }}</span>
-            </div>
-          </td>
-          <td>{{ user.createdAt.toDate() | date:'MMM dd, y' }}</td>
-          <td>
-            <ion-badge [color]="getStatusColor(user.status)">
-              {{ user.status | titlecase }}
-            </ion-badge>
-          </td>
-          <td>
-            <ion-buttons>
-              <ion-button class="delete" size="small" fill="clear">
-                <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
-              </ion-button>
-              <ion-button class="edit" size="small" fill="clear">
-                <ion-icon slot="icon-only" name="create-outline"></ion-icon>
-              </ion-button>
-            </ion-buttons>
-          </td>
-        </tr>
-      </ion-row>
-    </ion-grid>
-      
+            <!-- Projects Card -->
+            <ion-card class="stat-card projects-card">
+              <ion-card-content>
+                <div class="stat-content">
+                  <div class="stat-number">{{approvedCount}}</div>
+                  <div class="stat-details-green">
+                    <h3>Approved</h3>
+                    <p></p>
+                  </div>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </div>
+        </div>
+              
+        <!-- Users Card -->
+        <ion-card class="users-card">
+          <ion-card-header>
+            <ion-card-title>Les Utilisateurs</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list class="user-list">
+              <ion-item *ngFor="let user of businesses" lines="none" class="user-item">
+                <div class="customer-info">
+                  <ion-avatar>
+                    <img [src]="user.profileImageUrl || 'https://gravatar.com/avatar/?d=identicon'" alt="User">
+                  </ion-avatar>
+                  <div class="user-details">
+                    <h3>{{ user.firstName }} {{ user.lastName }}</h3>
+                    <p>{{ user.createdAt.toDate() | date:'MMM dd, y' }}</p>
+                  </div>
+                </div>
+                <div class="action-buttons">
+                  <ion-button class="view-btn" fill="clear" color="primary" size="small" (click)="viewUserDetails(user)">
+                    <ion-icon slot="start" name="eye-outline"></ion-icon>
+                    Voir
+                  </ion-button>
+                  <ion-button class="delete-btn" color="danger" size="small" (click)="deleteUser(user.id)">
+                    <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                  </ion-button>
+                </div>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
 
-      <!-- User Stats -->
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>User Statistics</ion-card-title>
-          <ion-card-subtitle>User registrations for last 6 months</ion-card-subtitle>
-        </ion-card-header>
-        <ion-card-content>
-          <canvas id="userStatsChart" height="250"></canvas>
-        </ion-card-content>
-      </ion-card>
-
-  
-     
+        <p class="copyright">CoteAdmin © 2025 - All Rights Reserved</p>
+      </div>
     </ion-content>
-
-    <ion-footer>
-      <ion-toolbar>
-        <ion-title size="small" class="ion-text-center">CoteAdmin © 2025 - All Rights Reserved</ion-title>
-      </ion-toolbar>
-    </ion-footer>
   </div>
+
+  <!-- User Details Modal -->
+  <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeModal()">
+    <ng-template>
+      <div class="custom-header">
+        <h1 class="dashboard-header">Détails <br>de l'Utilisateur</h1>
+        <div class="profile-container">
+          <ion-button (click)="closeModal()">
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+      <ion-content class="ion-padding">
+        <div *ngIf="selectedUser">
+          <div class="user-profile-header">
+            <ion-avatar class="large-avatar">
+              <img [src]="selectedUser.profileImageUrl || 'https://gravatar.com/avatar/?d=identicon'" alt="User">
+            </ion-avatar>
+            <h2>{{ selectedUser.firstName }} {{ selectedUser.lastName }}</h2>
+            <p class="user-status" [ngClass]="selectedUser.status">{{ selectedUser.status }}</p>
+          </div>
+
+          <ion-list>
+            <ion-item>
+              <ion-label>
+                <h3>Email</h3>
+                <p>{{ selectedUser.email }}</p>
+              </ion-label>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                <h3>Téléphone</h3>
+                <p>{{ selectedUser.phone || 'Non spécifié' }}</p>
+              </ion-label>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                <h3>Date d'inscription</h3>
+                <p>{{ selectedUser.createdAt.toDate() | date:'dd MMM yyyy, HH:mm' }}</p>
+              </ion-label>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                <h3>Dernière connexion</h3>
+                <p>{{ selectedUser.lastLogin ? (selectedUser.lastLogin.toDate() | date:'dd MMM yyyy, HH:mm') : 'Jamais' }}</p>
+              </ion-label>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                <h3>Adresse</h3>
+                <p>{{ selectedUser.address || 'Non spécifiée' }}</p>
+              </ion-label>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                <h3>ID</h3>
+                <p>{{ selectedUser.id }}</p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+
+          <!-- Actions Section -->
+          <div class="user-actions">
+            <ion-button expand="block" color="primary" *ngIf="selectedUser.status === 'pending'" (click)="approveUser(selectedUser.id)">
+              <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
+              Approuver l'utilisateur
+            </ion-button>
+            <ion-button expand="block" color="primar" (click)="closeModal()">
+              Fermer
+            </ion-button>
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-app>
