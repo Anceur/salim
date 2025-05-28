@@ -104,23 +104,24 @@
         </ion-item>
       </div>
 
-      <div *ngIf="currentStep === 3" class="form-section">
-        <ion-item class="file-upload-item">
-          <div class="custom-file-upload">
-            <img src="../../../../assets/images/upload.png" alt="Icône de téléchargement" class="upload-image" />
-            <input type="file" (change)="onFileSelected($event)" accept="image/*" class="file-input" />
-          </div>
-          <ion-label>Télécharger une preuve d'entreprise</ion-label>
-        </ion-item>
-      
-        <div *ngIf="selectedFile" class="file-preview">
-          <div class="file-info">
-            <ion-icon name="document-text-outline"></ion-icon>
-            <span class="file-name">{{ selectedFile.name }}</span>
-            <span class="file-size">({{ selectedFile.size | number }} octets)</span>
-          </div>
-        </div>
-      </div>   
+     <!-- Step 3: Social Media Accounts -->
+<div *ngIf="currentStep === 3">
+  <div class="form-field">
+    <ion-item>
+      <ion-icon slot="start" name="logo-tiktok"></ion-icon>
+      <ion-label position="floating">Compte TikTok</ion-label>
+      <ion-input [(ngModel)]="tiktokAccount" name="tiktokAccount" placeholder="@votre_compte"></ion-input>
+    </ion-item>
+  </div>
+
+  <div class="form-field">
+    <ion-item>
+      <ion-icon slot="start" name="logo-instagram"></ion-icon>
+      <ion-label position="floating">Compte Instagram</ion-label>
+      <ion-input [(ngModel)]="instagramAccount" name="instagramAccount" placeholder="@votre_compte"></ion-input>
+    </ion-item>
+  </div>
+</div>
     
       <div class="navigation-buttons">
         <ion-button fill="outline" class="back-button" (click)="goToPreviousStep()" *ngIf="currentStep > 1">

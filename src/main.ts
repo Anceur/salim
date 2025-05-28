@@ -10,7 +10,11 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 import { environment } from './environments/environment.prod';
 import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { PhoneService } from './app/core/services/phone.service';
-import { Keyboard } from '@ionic-native/keyboard/ngx';  // استيراد Keyboard
+import { Keyboard } from '@ionic-native/keyboard/ngx';  
+import { provideHttpClient } from '@angular/common/http';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
+import { HttpLoaderFactory } from './app/translate-loader';
 
 if (environment.production) {
   enableProdMode();
@@ -24,8 +28,20 @@ bootstrapApplication(AppComponent, {
     provideStorage(() => getStorage()),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideIonicAngular(),
+   importProvidersFrom(
+  TranslateModule.forRoot({
+    loader: {
+      provide: TranslateLoader,
+      useFactory: HttpLoaderFactory,
+      deps: [HttpClient],
+    },
+  })
+),
+
+    provideHttpClient(),
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     PhoneService,
     importProvidersFrom(Keyboard),  
+    
   ]
 });

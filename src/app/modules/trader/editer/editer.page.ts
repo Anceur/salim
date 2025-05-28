@@ -2,12 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoadingController, NavController, ToastController, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonItem, IonLabel, IonInput, IonIcon } from '@ionic/angular/standalone';
+import { LoadingController, NavController, ToastController, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonItem, IonLabel, IonInput, IonIcon, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Firestore, doc, updateDoc, getDoc } from '@angular/fire/firestore';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { Keyboard } from '@capacitor/keyboard';
 import { IonBackButton, IonButtons } from '@ionic/angular/standalone';
 import { UserService } from 'src/app/core/services/user.service';
 
@@ -30,7 +29,9 @@ import { UserService } from 'src/app/core/services/user.service';
     IonInput,
     IonBackButton,
     IonButtons,
-    IonIcon
+    IonIcon,
+    IonSelect,
+    IonSelectOption
   ]
 })
 export class EditerPage implements OnInit {
@@ -55,7 +56,7 @@ export class EditerPage implements OnInit {
       private firestore: Firestore,
       private storageService: StorageService,
       private authService: AuthService,
-      private userService:UserService
+      private userService: UserService
     ) {
       this.profileForm = this.formBuilder.group({
         firstName: ['', [Validators.required]],
@@ -70,10 +71,6 @@ export class EditerPage implements OnInit {
     ngOnInit() {
       this.userProfile = this.storageService.getUserProfile();
       this.loadUserData();
-
-    Keyboard.setScroll({ isDisabled: false }); 
-
-
     }
   
     async loadUserData() {
@@ -140,7 +137,6 @@ export class EditerPage implements OnInit {
         }
   
         // Update business document in Firestore
-  
         await this.userService.updateBusiness(this.userProfile.uid, {
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -149,6 +145,7 @@ export class EditerPage implements OnInit {
           businessField: formData.businessField,
           wilaya: formData.wilaya
         });
+        
         // Update local storage
         const updatedProfile = {
           ...this.userProfile,

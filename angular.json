@@ -33,7 +33,17 @@
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "assets"
-              }
+              },
+                {
+    "glob": "robots.txt",
+    "input": "src",
+    "output": "."
+  },
+  {
+    "glob": "sitemap.xml",
+    "input": "src",
+    "output": "."
+  }
             ],
             "styles": [
               "src/global.scss",
@@ -52,8 +62,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "8kb",
-                  "maximumError": "12kb"
+                 "maximumWarning": "20kb",  
+    "maximumError": "25kb"     
                 }
               ],
               "fileReplacements": [

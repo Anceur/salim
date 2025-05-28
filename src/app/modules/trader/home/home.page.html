@@ -1,8 +1,7 @@
 <ion-content [fullscreen]="true" scrollY="true" keyboard-attach="true" scrollEvents="true">
 
-
   <div class="custom-header">
-    <h1 class="page-title">MOUDIR<br>LIST</h1>
+    <h1 class="page-title">MOUDIR LIST</h1>
     <div class="profile-container">
       <ion-button id="profile-trigger">
         <img src="assets/icon/profile.png" alt="Profil" class="profile-image">
@@ -47,7 +46,7 @@
       {{ userStatus === 'approved' ? 'Ajouter un numéro' : 'En attente d\'approbation' }}
     </ion-button>
 
-    <ion-button expand="block" class="ion-margin-top checkout-btn"  (click)="searchPhoneNumber()">
+    <ion-button expand="block" class="ion-margin-top checkout-btn" (click)="searchPhoneNumber()">
       <ion-icon name="search-outline" slot="start"></ion-icon>
       Vérifier un numéro
     </ion-button>
@@ -79,11 +78,24 @@
     </ng-template>
   </ion-modal>
 
-  <!-- Search prompt if no search done -->
-  <div class="search-prompt ion-text-center ion-padding" *ngIf="showSearchPrompt && (!searchQuery || searchQuery.trim() === '')">
+ <!-- Combined search prompt and no results message -->
+<div class="search-prompt ion-text-center ion-padding" *ngIf="showSearchPrompt || noResultsFound">
+  <ng-container *ngIf="showSearchPrompt && (!searchQuery || searchQuery.trim() === '')">
+    <!-- Search prompt content -->
     <img src="assets/images/noresult.png" alt="Icône de recherche" class="large-icon">
     <p>Aaaah! Vous n'avez pas encore effectué de recherche!</p>
-  </div>
+  </ng-container>
+  
+  <ng-container *ngIf="noResultsFound && !showSearchPrompt">
+    <!-- No results content -->
+    <img src="assets/images/nonresult1.jpg" alt="Aucun résultat" class="large-icon">
+    <p>Aucun résultat trouvé pour "{{ searchQuery }}"</p>
+    <ion-button expand="block" class="ion-margin-top" (click)="openEvaluationDialog()" *ngIf="isAuthenticated && userStatus === 'approved'">
+      <ion-icon name="add-outline" slot="start"></ion-icon>
+      Ajouter ce numéro
+    </ion-button>
+  </ng-container>
+</div>
 
   <!-- Search Results -->
   <div class="phone-list ion-margin-top" *ngIf="filteredNumbers.length > 0">
@@ -106,8 +118,64 @@
             </ion-chip>
           </div>
         </ion-label>
+        <ion-button fill="clear" slot="end" (click)="viewPhoneDetails(item)" color="primary">
+          <ion-icon name="eye-outline" slot="icon-only"></ion-icon>
+          Voir
+        </ion-button>
       </ion-item>
     </ion-list>
   </div>
+
+  <!-- Modal for Phone Details -->
+  <ion-modal [isOpen]="showPhoneDetails" (didDismiss)="closePhoneDetails()" class="custom-details-modal">
+    <ng-template>
+      <div class="details-box ion-padding">
+        <button class="close-btn" (click)="closePhoneDetails()" aria-label="Fermer">
+          <ion-icon name="close-circle-outline"></ion-icon>
+        </button>
+        <h2>Détails du numéro</h2>
+        
+        <div class="number-info">
+          <h3>{{ selectedPhone?.number }}</h3>
+          <div class="rating-summary">
+            <ion-chip outline color="success">
+              <ion-label>Valide: {{ selectedPhone?.validRatings || 0 }}</ion-label>
+            </ion-chip>
+            <ion-chip outline color="danger">
+              <ion-label>Invalide: {{ selectedPhone?.invalidRatings || 0 }}</ion-label>
+            </ion-chip>
+            <ion-chip outline color="primary">
+              <ion-label>Total: {{ selectedPhone?.totalRatings || 0 }}</ion-label>
+            </ion-chip>
+          </div>
+        </div>
+<div class="comments-section">
+  <h4>Commentaires</h4>
+  <div *ngIf="selectedPhone?.comments && selectedPhone.comments.length > 0" class="comments-list">
+    <div *ngFor="let comment of selectedPhone.comments" class="comment-item">
+      <div class="comment-status" [ngClass]="{'valid': comment.isValid, 'invalid': !comment.isValid}">
+        <ion-icon [name]="comment.isValid ? 'checkmark-circle' : 'close-circle'"></ion-icon>
+        <span>{{ comment.isValid ? 'Valide' : 'Invalide' }}</span>
+      </div>
+      <!-- تغيير comment.text إلى comment.comment -->
+      <div class="comment-text" *ngIf="comment.comment && comment.comment.trim() !== ''">
+        <p>{{ comment.comment }}</p>
+      </div>
+      <!-- إضافة رسالة عندما لا يوجد تعليق -->
+      <div class="comment-text" *ngIf="!comment.comment || comment.comment.trim() === ''">
+        <p><em>Aucun commentaire</em></p>
+      </div>
+      <div class="comment-date" *ngIf="comment.createdAt">
+        <small>{{ comment.createdAt | date:'medium' }}</small>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!selectedPhone?.comments || selectedPhone.comments.length === 0" class="no-comments">
+    <p>Aucun commentaire pour ce numéro</p>
+  </div>
+</div>
+      </div>
+    </ng-template>
+  </ion-modal>
 
 </ion-content>

@@ -4,13 +4,10 @@ import{adminGuard} from './guards/admin.guard'
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'loading', 
+    redirectTo: 'home', 
     pathMatch: 'full'
   },
-  {
-    path: 'loading',
-    loadComponent: () => import('./shared/loading/loading.page').then(m => m.LoadingPage)
-  },
+
   {
     path: 'home',
     loadComponent: () => import('./modules/trader/home/home.page').then(m => m.HomePage)

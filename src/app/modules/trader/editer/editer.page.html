@@ -1,5 +1,4 @@
-<ion-content  [scrollY]="true" [fullscreen]="true">
-
+<ion-content [scrollY]="true" [fullscreen]="true">
   <div class="edit-profile-container">
     <div class="edit-header">
       <h1>Modification du Profil</h1>
@@ -74,15 +73,14 @@
 
         <div class="form-group">
           <ion-item>
-            <select formControlName="wilaya" class="native-phone-style">
-              <option [value]="profileForm.get('wilaya')?.value" selected>{{ profileForm.get('wilaya')?.value || 'Wilaya' }}</option>
-              <option *ngFor="let w of wilayas" [value]="w">{{ w }}</option>
-            </select>
+            <ion-label position="floating">Wilaya</ion-label>
+            <ion-select formControlName="wilaya" interface="action-sheet" placeholder="Sélectionnez une wilaya">
+              <ion-select-option *ngFor="let w of wilayas" [value]="w">{{ w }}</ion-select-option>
+            </ion-select>
           </ion-item>
         </div>
       </div>
 
-    
       <div class="form-actions">
         <ion-button type="submit" expand="block">
           Enregistrer les modifications

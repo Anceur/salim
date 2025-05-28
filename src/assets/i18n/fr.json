@@ -1,0 +1,12 @@
+{
+  "META": {
+    "HOME_KEYWORDS": "moudirlist, e-commerce, vérification des numéros, commandes en ligne, clients fiables, faux numéros, validation client, ventes en ligne, commenter un numéro, noter un numéro",
+    "HOME_DESC": "moudirlist – Une plateforme qui aide les vendeurs à vérifier les numéros de téléphone des clients et à laisser des commentaires pour évaluer leur fiabilité avant de confirmer les commandes.",
+    "REGISTER_KEYWORDS": "moudirlist, inscription, créer un compte, nouvel utilisateur, vérification des numéros, commenter un numéro, arnaques, e-commerce, plateforme vendeurs",
+    "REGISTER_DESC": "Inscrivez-vous sur moudirlist pour vérifier les numéros de clients, ajouter des commentaires et éviter les fausses commandes."
+  },
+  "PAGE_TITLE": {
+    "HOME": "Accueil | moudirlist",
+    "REGISTER": "Inscription | moudirlist"
+  }
+}

@@ -5,7 +5,7 @@ import { IonicModule, LoadingController, ToastController } from '@ionic/angular'
 import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { Keyboard } from '@capacitor/keyboard';
+import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { addIcons } from 'ionicons';
 import {
@@ -21,7 +21,10 @@ import {
   documentTextOutline,
   arrowBack,
   chevronDownOutline,
+  logoTiktok,
+  logoInstagram
 } from 'ionicons/icons';
+import { Meta, Title } from '@angular/platform-browser';
 
 
 @Component({
@@ -42,9 +45,10 @@ export class RegisterPage {
   wilaya = '';
   city = '';
   address = '';
+  tiktokAccount = '';
+  instagramAccount = '';
   agreeTerms = false;
   currentStep: number = 1;
-  selectedFile: File | null = null;
   progressWidth: number = 0;
   
 
@@ -60,6 +64,9 @@ export class RegisterPage {
     private toastCtrl: ToastController,
     private router: Router,
     private storageService: StorageService,
+        private meta: Meta,
+    private titleService: Title,
+    private translate: TranslateService,
 
   ) {
     addIcons({
@@ -74,7 +81,9 @@ export class RegisterPage {
       buildOutline,
       documentTextOutline,
       arrowBack,
-      chevronDownOutline
+      chevronDownOutline,
+      logoTiktok,
+      logoInstagram
     });
   }
 
@@ -91,7 +100,16 @@ export class RegisterPage {
 
 
   ngOnInit() {
-    Keyboard.setScroll({ isDisabled: false }); // تمكين التمرير عند فتح لوحة المفاتيح
+
+       this.translate.get([
+      'META.REGISTER_KEYWORDS',
+      'META.REGISTER_DESC',
+      'PAGE_TITLE.REGISTER'
+    ]).subscribe(translations => {
+      this.meta.updateTag({ name: 'keywords', content: translations['META.REGISTER_KEYWORDS'] });
+      this.meta.updateTag({ name: 'description', content: translations['META.REGISTER_DESC'] });
+      this.titleService.setTitle(translations['PAGE_TITLE.REGISTER']);
+    });
   }
 
 
@@ -237,6 +255,8 @@ export class RegisterPage {
 
     const loading = await this.loadingCtrl.create({
       message: 'Enregistrement en cours...',
+     cssClass: 'custom-loading',
+      
     });
     await loading.present();
 
@@ -248,6 +268,8 @@ export class RegisterPage {
         businessName: this.businessName,
         businessField: this.businessField,
         wilaya: this.wilaya,
+        tiktokAccount: this.tiktokAccount,
+        instagramAccount: this.instagramAccount
       };
       this.storageService.setUserProfile(registrationData); 
   
@@ -277,15 +299,9 @@ export class RegisterPage {
       case 2:
         return 'Informations entreprise';
       case 3:
-        return 'Justificatif d\'entreprise';
+        return 'Comptes sociaux';
       default:
         return '';
-    }
-  }
-
-  onFileSelected(event: any): void {
-    if (event.target.files.length > 0) {
-      this.selectedFile = event.target.files[0];
     }
   }
 }

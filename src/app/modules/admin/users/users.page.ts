@@ -69,6 +69,11 @@ export class UsersPage implements OnInit, OnDestroy {
     this.loadBusinesses();
   }
 
+  isAdminUser(user: any): boolean {
+    // Check if the user has role property and if it's equal to 'ADMIN'
+    return user && (user.role === 'ADMIN' || user.role === 'admin');
+  }
+
   async loadStatistics() {
     // Get pending accounts
     this.pendingAccounts = await this.userService.getPendingAccounts();
@@ -185,8 +190,22 @@ export class UsersPage implements OnInit, OnDestroy {
   goLogout() {
     this.router.navigate(['/login']);
   }
+async deleteUser(userId: string) {
+    // Find the user
+    const user = this.businesses.find(u => u.id === userId);
+    
+    // Check if user is admin, if so, prevent deletion
+    if (this.isAdminUser(user)) {
+      const toast = await this.toastController.create({
+        message: 'Les utilisateurs Admin ne peuvent pas être supprimés',
+        duration: 2000,
+        color: 'warning'
+      });
+      toast.present();
+      return;
+    }
 
-  async deleteUser(userId: string) {
+    // Continue with the normal delete confirmation flow for non-admin users
     const alert = await this.alertController.create({
       header: 'Confirmation',
       message: 'Êtes-vous sûr de vouloir supprimer cet utilisateur?',
@@ -207,7 +226,6 @@ export class UsersPage implements OnInit, OnDestroy {
 
     await alert.present();
   }
-
   /**
    * Perform the actual deletion
    */

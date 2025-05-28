@@ -17,15 +17,29 @@
 
 // Header styling
 
+// Modification du code SCSS pour le ion-back-button
 ion-back-button {
-  position: absolute;
+  position: relative; // Changer de absolute à relative
   font-size: 25px;
-  top: 0px;
-  left: -15px;
-
   --color: rgb(0, 0, 0);
 }
 
+ion-buttons {
+  margin-bottom: 16px;
+  align-self: flex-start; // Aligner les boutons à gauche
+  margin-left: -15px; // Ajuster la marge pour aligner correctement
+}
+
+
+
+// Ajout de style spécifique pour le back-button
+.back-button {
+  --color: #4a90e2;
+  --background: transparent;
+  --border-color: #4a90e2;
+  --border-width: 1px;
+  --border-style: solid;
+}
 
 ion-button {
   --color: white;
@@ -39,23 +53,27 @@ ion-button {
 
 // Content styling
 ion-content {
-  --background: #fff;
-  
+ --background: #fff;
   display: flex;
   flex-direction: column;
   height: 100%;
 
 
+
 .register-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 20px;
-  box-sizing: border-box;
-  animation: fadeIn 0.5s ease-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    box-sizing: border-box;
+    animation: fadeIn 0.5s ease-out;
+    max-width: 500px;  // Définit une largeur maximale
+    margin: 0 auto;    // Centre le formulaire horizontalement
+    width: 100%; 
 }
   
+
+
   .form-header {
     display: flex;
     flex-direction: column;
@@ -156,7 +174,8 @@ ion-content {
     padding: 25px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.23);
     margin-bottom: 20px;
-    animation: _ngcontent-ng-c1511788965_fadeInUp 0.8s ease 0.2s both;
+    animation: fadeIn 0.8s ease 0.2s both;
+    width: 100%;    
     
     .form-section {
       margin-bottom: 25px;

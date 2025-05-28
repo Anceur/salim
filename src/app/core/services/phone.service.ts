@@ -138,6 +138,41 @@ export class PhoneService {
     }
   }
 
+  // Get all ratings for a specific phone number
+  async getPhoneComments(phoneId: string) {
+  try {
+    const ratingCollectionRef = collection(this.firestore, 'phoneRating');
+    const phoneRatingsQuery = query(
+      ratingCollectionRef,
+      where('phoneId', '==', phoneId)
+    );
+    
+    const ratingsSnapshot = await getDocs(phoneRatingsQuery);
+    
+    if (ratingsSnapshot.empty) {
+      return [];
+    }
+    
+    // Map the ratings data with their document IDs
+    const ratings = ratingsSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        isValid: data['isValid'],
+        comment: data['comment'] || '', // تأكد من وجود comment
+        timestamp: data['createdAt'], // استخدم timestamp بدلاً من createdAt
+        createdAt: data['createdAt'] ? data['createdAt'].toDate() : new Date(),
+        updatedAt: data['updatedAt'] ? data['updatedAt'].toDate() : null
+      };
+    });
+    
+    // Sort ratings by creation date (newest first)
+    return ratings.sort((a: any, b: any) => b.createdAt - a.createdAt);
+  } catch (error) {
+    console.error('Erreur lors de la récupération des commentaires:', error);
+    return [];
+  }
+}
 
   async getUserRatedPhones() {
     try {
@@ -278,6 +313,4 @@ export class PhoneService {
     const phoneCollectionRef = collection(this.firestore, 'phoneNumbers');
     return collectionData(phoneCollectionRef, { idField: 'id' }) as Observable<any[]>;
   }
-
-  
 }

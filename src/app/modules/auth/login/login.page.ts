@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonIcon } from '@ionic/angular/standalone';
 import { IonicModule, LoadingController, ToastController } from '@ionic/angular';
 import { AuthService } from '../../../core/services/auth.service';
-import { Keyboard } from '@capacitor/keyboard';
+
 import { RouterLink, Router } from '@angular/router';
 
 import { addIcons } from 'ionicons';
@@ -40,7 +40,7 @@ export class LoginPage {
 
   
   ngOnInit() {
-    Keyboard.setScroll({ isDisabled: false }); // تمكين التمرير عند فتح لوحة المفاتيح
+ 
   }
 
 
@@ -63,6 +63,7 @@ export class LoginPage {
   
     const loading = await this.loadingCtrl.create({
       message: 'Connexion en cours...',
+       cssClass: 'custom-loading'
     });
     await loading.present();
   

@@ -53,3 +53,10 @@
   font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
   box-sizing: border-box;
 }
+
+
+  .custom-loading {
+  --background: #ffffff; // white background
+  --color: #000000; // black text
+  color: #000000;
+}

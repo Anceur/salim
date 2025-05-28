@@ -98,6 +98,7 @@ ion-item{
   font-family: "Anton", sans-serif;
   font-weight: 600;
   font-size: 3.5rem;
+  width: 60%;
   color: #5aabfc;
   margin: 0;
   animation: colorPulse 6s infinite ease-in-out;
@@ -149,10 +150,6 @@ ion-popover {
   --box-shadow: 0 4px 16px #{$shadow-color};
   --backdrop-opacity: 0.05;
   
-  ::part(arrow) {
-    left: auto !important;      // Disable left positioning
-    right: 10px !important;     // Position arrow 10px from the right edge
-  }
 
   ion-list {
     padding: 4px;
@@ -187,7 +184,6 @@ ion-popover {
     }
   }
 }
-
 .cool-container {
   display: flex;
   justify-content: center;
@@ -196,22 +192,24 @@ ion-popover {
   background-color: #f0f4ff;
   border-radius: $border-radius-lg;
   box-shadow: 0 4px 16px rgb(0 0 0 / 23%);
-  padding: 20px 15px;
+  padding: 10px 12px;
+     max-width: 523px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
   animation: fadeInUp 0.8s ease 0.2s both;
 
   .feature-image {
     position: absolute;
-    top: -70px;
+    top: -50px;
     left: 50%;
     transform: translateX(-50%);
-    max-width: 140px;
+    max-width: 100px;
     height: auto;
     border-radius: 50%;
-    border: 4px solid #fff;
-
+    border: 3px solid #fff;
   }
-  
-  // Search field with animation
+
   .search-item {
     --border-radius: 80px;
     --background: #{$light-bg};
@@ -219,27 +217,27 @@ ion-popover {
     --border-width: 1.2px;
     --border-style: solid;
     --padding-start: 10px;
-    --padding-end: 10px; 
+    --padding-end: 10px;
     --box-shadow: 0 1px 4px rgba(23, 64, 167, 0.04);
     border-radius: 80px;
-    margin-top: 30%;
+    margin-top: 20%;
     transition: all 0.3s ease;
     animation: fadeInUp 0.8s ease 0.4s both;
-    
+
     &:hover, &:focus-within {
       box-shadow: 0 3px 12px rgba(99, 102, 241, 0.18);
       transform: translateY(-3px) scale(1.02);
     }
-    
+
     ion-icon {
       color: #000000;
       background: #ffffff00;
-      font-size: 24px;
+      font-size: 20px;
     }
-    
+
     ion-input {
       --padding-start: 10px;
-      font-size: 16px;
+      font-size: 15px;
     }
   }
 }
@@ -306,6 +304,14 @@ ion-popover {
   padding: 40px -1px;
   animation: fadeInUp 1s ease;
 
+    // These items can be hidden when search is active, but maintain the space
+  &.hidden-prompt {
+    visibility: hidden;
+    opacity: 0;
+    height: 300px; // Keep the same height to avoid layout shifts
+    margin-bottom: 20px; // Add some space to avoid abrupt transitions
+  }
+
   .large-icon {
     width: 45%;
     font-size: 85px;
@@ -326,6 +332,7 @@ ion-popover {
 .phone-list {
   border-radius: 20px;
   max-width: 100%;
+  
   
   h2 {
     text-align: center;
@@ -436,6 +443,311 @@ ion-popover {
     }
   
     }
+}
+
+
+// Custom Modal Styling for Phone Details
+.custom-details-modal {
+  --backdrop-opacity: 0.6;
+  --box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  --border-radius: 16px;
+  --width: 90%;
+  --max-width: 500px;
+  --height: auto;
+  --max-height: 80%;
+  
+  @media (min-width: 768px) {
+    --width: 450px;
+  }
+  
+  // Modal content container
+  .details-box {
+    position: relative;
+    background: #f0f4ff;
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 24px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    
+    // Main heading
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-top: 0;
+      margin-bottom: 24px;
+      text-align: center;
+      color: black;
+      position: relative;
+      
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background-color: var(--ion-color-primary);
+        border-radius: 2px;
+      }
+    }
+    
+    // Close button
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: transparent;
+      border: none;
+      color: black;
+      font-size: 24px;
+      padding: 0;
+      z-index: 10;
+      cursor: pointer;
+      transition: color 0.2s ease;
+      
+      &:hover, &:focus {
+        color: var(--ion-color-danger);
+        outline: none;
+      }
+      
+      ion-icon {
+        font-size: 28px;
+      }
+    }
+  }
+  
+  // Phone Number Info Section
+  .number-info {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: rgba(var(--ion-color-primary-rgb), 0.05);
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0 0 12px 0;
+      text-align: center;
+      color:#2247b6;
+      letter-spacing: 0.5px;
+    }
+    
+    // Rating chips container
+    .rating-summary {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+      
+      ion-chip {
+        height: 28px;
+        font-weight: 500;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        
+        &[color="success"] {
+          --background: rgba(var(--ion-color-success-rgb), 0.12);
+          --color: var(--ion-color-success-shade);
+        }
+        
+        &[color="danger"] {
+          --background: rgba(var(--ion-color-danger-rgb), 0.12);
+          --color: var(--ion-color-danger-shade);
+        }
+        
+        &[color="primary"] {
+          --background: rgba(var(--ion-color-primary-rgb), 0.12);
+          --color: var(--ion-color-primary-shade);
+        }
+      }
+    }
+  }
+
+
+  
+  // Comments Section
+  .comments-section {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 5px;
+    
+    h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 0 0 15px 0;
+      color: #2247b6;
+      position: relative;
+      padding-left: 15px;
+      
+      &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 5px;
+        height: 16px;
+        width: 4px;
+        background-color: var(--ion-color-primary);
+        border-radius: 2px;
+      }
+    }
+    
+    // Comments List
+    .comments-list {
+      .comment-item {
+        margin-bottom: 15px;
+        padding: 12px 15px;
+        border-radius: 8px;
+        background-color: #e8efff;
+        border-left: 3px solid transparent;
+        transition: all 0.2s ease;
+        
+        &:hover {
+          box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+          transform: translateY(-2px);
+        }
+        
+        .comment-status {
+          display: flex;
+          align-items: center;
+          margin-bottom: 8px;
+          font-weight: 500;
+          font-size: 0.85rem;
+          
+          ion-icon {
+            margin-right: 6px;
+            font-size: 18px;
+          }
+          
+          &.valid {
+            color: var(--ion-color-success);
+          }
+          
+          &.invalid {
+            color: var(--ion-color-danger);
+          }
+        }
+        
+        .comment-text {
+          p {
+            margin: 0;
+            color: #000000;
+            font-size: 0.95rem;
+            line-height: 1.4;
+          }
+        }
+        
+        .comment-date {
+          display: flex;
+          justify-content: flex-end;
+          margin-top: 8px;
+          
+          small {
+            color: var(--ion-color-medium);
+            font-size: 0.75rem;
+          }
+        }
+      }
+    }
+    
+    // No comments message
+    .no-comments {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100px;
+      color: var(--ion-color-medium);
+      font-style: italic;
+      background-color: rgba(var(--ion-color-light-rgb), 0.7);
+      border-radius: 8px;
+      
+      p {
+        margin: 0;
+      }
+    }
+  }
+  
+  // Custom scrollbar for comments section
+  .comments-section::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .comments-section::-webkit-scrollbar-track {
+    background: rgba(var(--ion-color-light-rgb), 0.5);
+    border-radius: 2px;
+  }
+  
+  .comments-section::-webkit-scrollbar-thumb {
+    background: rgba(var(--ion-color-medium-rgb), 0.5);
+    border-radius: 2px;
+  }
+  
+  .comments-section::-webkit-scrollbar-thumb:hover {
+    background: rgba(var(--ion-color-primary-rgb), 0.6);
+  }
+}
+
+// Animations for modal contents
+.custom-details-modal {
+  .ion-page {
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  .number-info, .comments-section h4 {
+    animation: slideDown 0.4s ease-out forwards;
+  }
+  
+  .comment-item {
+    opacity: 0;
+    animation: slideUp 0.3s ease-out forwards;
+    
+    @for $i from 1 through 10 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{0.1 + ($i * 0.05)}s;
+      }
+    }
+  }
+}
+
+// Animation keyframes
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Additional status styling for comments
+.custom-details-modal .comment-item {
+  &:has(.comment-status.valid) {
+    border-left-color: var(--ion-color-success);
+  }
+  
+  &:has(.comment-status.invalid) {
+    border-left-color: var(--ion-color-danger);
+  }
 }
 
 // Modal styling with animation
@@ -620,15 +932,8 @@ ion-modal {
     padding: 20px 80px 50px 80px;
   }
 
-  ion-content{
-    --background: #fff;
-    --padding-start: 50px;
-    --padding-top: 50px;
-    --padding-bottom: 10px;
-    --padding-end: 50px;
-}
 .search-prompt  .large-icon {
-    width: 40%;
+    width: 20%;
 }
 .search-prompt  p {
   font-size: 1.4rem;
